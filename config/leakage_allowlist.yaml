@@ -1,0 +1,5 @@
+# Features whose single-feature AUC exceeds the leakage threshold but a human confirmed as legitimate.
+# check_leakage.py lets them pass from then on. Every field is required:
+#   - {feature: original_ltv, confirmed_by: oliver, reason: "why this is not leakage", date: "2026-11-27"}
+auc_threshold: 0.85
+allow: []

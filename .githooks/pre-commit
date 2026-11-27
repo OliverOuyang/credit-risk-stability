@@ -1,9 +1,3 @@
 #!/bin/sh
-# Minimal red line until 2b replaces it with checks/check_redline.py:
-# refuse raw/interim data and Freddie Mac loan-level files.
-bad=$(git diff --cached --name-only | grep -E '^data/(raw|interim)/|sample_(orig|perf)_|historical_data_|\.zip$')
-if [ -n "$bad" ]; then
-  echo "pre-commit: raw loan data must not be committed:" >&2
-  echo "$bad" >&2
-  exit 1
-fi
+# Data/privacy red line on staged files (enabled by `make setup`). Full `make check` runs in CI.
+exec uv run --quiet python -m checks.check_redline --staged

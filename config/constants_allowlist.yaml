@@ -1,0 +1,5 @@
+# Fixed industry constants that reports may quote without a metrics.json / config source.
+# check_numbers.py accepts any number listed in `values`. Each entry needs name and source.
+#   - {name: "...", values: [0.1], source: "where this constant comes from"}
+constants:
+  - {name: PSI stable / shift / major-shift thresholds, values: [0.1, 0.25], source: "industry convention (Siddiqi, Credit Risk Scorecards, 2006)"}
