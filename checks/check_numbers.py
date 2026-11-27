@@ -1,5 +1,5 @@
 """Number provenance: every number in finished reports must come from metrics.json, config/ or the
-constants allowlist. Reports should use placeholders ({{metrics.x}}, {{config.x}}) rendered from those."""
+constants allowlist. Reports should use placeholders ({{metrics.x}}, {{stability.x}}, {{config.x}}) rendered from those."""
 import json
 import re
 from pathlib import Path
@@ -31,9 +31,10 @@ def source_values(root):
         elif isinstance(x, list):
             [walk(i) for i in x]
 
-    m = Path(root) / "outputs" / "metrics.json"
-    if m.exists():
-        walk(json.loads(m.read_text()))
+    for name in ("metrics.json", "stability.json"):
+        m = Path(root) / "outputs" / name
+        if m.exists():
+            walk(json.loads(m.read_text()))
     for p in sorted((Path(root) / "config").glob("*.yaml")):
         walk(yaml.safe_load(p.read_text()))
     return vals

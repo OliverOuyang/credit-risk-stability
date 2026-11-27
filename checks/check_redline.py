@@ -50,7 +50,7 @@ def path_violations(f, allow):
 
 
 def agg_violations(f, text, cfg, loan):
-    df = pd.read_csv(io.StringIO(text), dtype=str)
+    df = pd.read_csv(io.StringIO(text), dtype=str, keep_default_na=False)  # blank cells stay ""
     col, floor = cfg["count_column"], cfg["min_count"]
     v = [f"{f}: aggregate table has loan-id column {c}" for c in df.columns if "loan" in c.lower()]
     if any(loan.search(x) for x in df.astype(str).to_numpy().ravel()):

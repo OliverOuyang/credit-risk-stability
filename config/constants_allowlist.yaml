@@ -1,6 +1,7 @@
 # Fixed industry constants that reports may quote without a metrics.json / config source.
 # check_numbers.py accepts any number listed in `values`. Each entry needs name and source.
 #   - {name: "...", values: [0.1], source: "where this constant comes from"}
+# Optional id: code reads the constant by id (e.g. stability.py reads psi).
 constants:
-  - {name: PSI stable / shift / major-shift thresholds, values: [0.1, 0.25], source: "industry convention (Siddiqi, Credit Risk Scorecards, 2006)"}
+  - {id: psi, name: PSI stable / shift / major-shift thresholds, values: [0.1, 0.25], source: "industry convention (Siddiqi, Credit Risk Scorecards, 2006)"}
   - {name: 90+ days delinquent (status 03 = 90-119 days), values: [90], source: "Freddie Mac SFLLD User Guide, Current Loan Delinquency Status"}

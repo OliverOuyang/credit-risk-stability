@@ -1,0 +1,19 @@
+# src/crs/stability.py. Thresholds that are industry constants live in config/constants_allowlist.yaml
+# (looked up by id); everything here is a project policy choice.
+span: {start: "2005Q1", end: "2024Q2"}   # every vintage with a full 24-month window (target.yaml cutoff)
+periods:                                  # reported separately; "normal" otherwise
+  crisis: {start: "2007Q1", end: "2009Q4"}  # 2008 financial crisis vintages (inside train)
+  covid:  {start: "2020Q1", end: "2021Q4"}  # COVID forbearance vintages
+min_bads_for_auc: 30          # quarterly AUC left blank below this many bads
+backtest_years: [2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024]
+rolling:                       # annual retrain for backtest year Y, same shape as the fixed split
+  train_years_back: [8, 4]     # train on vintages Y-8 .. Y-4
+  valid_year_back: 3           # early stopping on Y-3; Y-3 Q4 + 24 months <= Y Q1 (gap rule)
+recalibration:
+  method: platt                # logistic on logit(p), fitted on the latest labelled vintage Y-3
+  fit_year_back: 3
+crisis_sensitivity:
+  drop_years: [2007, 2008, 2009]  # fixed models refitted on train vintages without these
+rules:
+  consecutive_quarters: 2      # PSI must stay in a band this many quarters before the rule fires
+bootstrap_reps: 500            # annual backtest intervals (paired where two models share a resample)

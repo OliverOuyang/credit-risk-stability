@@ -168,7 +168,7 @@ def test_redline_rejects_paths(repo):
 
 def test_redline_allows_allowlisted_paths(repo):
     files = [write(repo, "docs/workflow_log.csv", "issue,runs\nMULT-1,2\n"),
-             write(repo, "app/data/agg/psi.csv", "quarter,n,psi\n2010Q1,500,0.02\n"),
+             write(repo, "app/data/agg/psi.csv", "quarter,n,psi,auc\n2010Q1,500,0.02,\n"),  # blank cell ok
              write(repo, "data/manifest.sha256", "abc  ./sample_2010.zip\n")]
     assert check_redline.run(repo, files) == []
 
