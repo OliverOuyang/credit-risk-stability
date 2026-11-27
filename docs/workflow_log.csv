@@ -1,1 +1,2 @@
 issue,wall_hours,runs,rework,reviewer_findings,check_blocks,human_touches,stuck,regression
+MULT-413,5.4,7,0,0,0,6,"NotebookLM 登录过期（托管浏览器未登录）转副手修；全量文件每年 3.2 GB 放弃，改合并年份",

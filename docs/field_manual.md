@@ -6,6 +6,8 @@
 - [Release Notes（Release 48）](https://www.freddiemac.com/fmac-resources/research/pdf/release_notes.pdf)
 - [FAQ](https://www.freddiemac.com/fmac-resources/research/pdf/faq.pdf)
 
+这四份公开文档也建成了 NotebookLM 笔记本「Freddie Mac SFLLD 字段手册（公开文档）」（私有，仅作者可开），用于带引用查字段含义；笔记本里不放任何贷款数据。2026-11-27 用它核对了宽限期字段，答案和下文一致。
+
 ## 数据版本和截止日
 
 | 项 | 值 | 出处 |
