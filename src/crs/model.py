@@ -10,7 +10,7 @@ import pandas as pd
 from sklearn.linear_model import LogisticRegression
 
 from crs.target import ROOT, load_cfg
-from crs.frame import NUMERIC
+from crs.frame import NUMERIC, loan_quarter_index, quarter_index
 
 R = 6  # decimals kept in metrics files
 
@@ -24,24 +24,38 @@ def auc(y, s):
 
 def ks(y, s):
     o = np.argsort(-s, kind="stable")
-    yo = y[o]
+    yo, so = y[o], s[o]
     tpr = np.cumsum(yo) / yo.sum()
     fpr = np.cumsum(1 - yo) / (len(yo) - yo.sum())
-    return float(np.max(np.abs(tpr - fpr)))
+    last = np.r_[so[1:] != so[:-1], True]  # only at thresholds between distinct scores (ties grouped)
+    return float(np.max(np.abs(tpr - fpr)[last]))
 
 
-def evaluate(y, p, reps, rng, bins, level):
-    y, p = np.asarray(y, int), np.asarray(p, float)
-    boot = {"auc": [], "ks": []}
+def interval(est, boot, level):
+    lo, hi = np.percentile(boot, [50 * (1 - level), 50 * (1 + level)])
+    return {"est": round(est, R), "lo": round(lo, R), "hi": round(hi, R)}
+
+
+def evaluate(y, preds, reps, rng, bins, level):
+    """Per model metrics plus paired delta AUC (lightgbm - scorecard): both models share each resample."""
+    y = np.asarray(y, int)
+    preds = {k: np.asarray(p, float) for k, p in preds.items()}
+    boot = {(k, m): [] for k in preds for m in ("auc", "ks")}
     for _ in range(reps):
         i = rng.integers(0, len(y), len(y))
         if 0 < y[i].sum() < len(i):
-            boot["auc"].append(auc(y[i], p[i]))
-            boot["ks"].append(ks(y[i], p[i]))
+            for k, p in preds.items():
+                boot[k, "auc"].append(auc(y[i], p[i]))
+                boot[k, "ks"].append(ks(y[i], p[i]))
+    out = {k: {**{m: interval(fn(y, p), boot[k, m], level) for m, fn in (("auc", auc), ("ks", ks))},
+               **calibration(y, p, bins)} for k, p in preds.items()}
+    d = np.subtract(boot["lightgbm", "auc"], boot["scorecard", "auc"])
+    out["delta_auc"] = interval(out["lightgbm"]["auc"]["est"] - out["scorecard"]["auc"]["est"], d, level)
+    return out
+
+
+def calibration(y, p, bins):
     out = {}
-    for name, fn in (("auc", auc), ("ks", ks)):
-        lo, hi = np.percentile(boot[name], [50 * (1 - level), 50 * (1 + level)])
-        out[name] = {"est": round(fn(y, p), R), "lo": round(lo, R), "hi": round(hi, R)}
     q = pd.qcut(pd.Series(p).rank(method="first"), bins, labels=False)
     cal = pd.DataFrame({"q": q, "p": p, "y": y}).groupby("q").agg(n=("y", "size"), mean_pred=("p", "mean"),
                                                                     bad_rate=("y", "mean"))
@@ -134,11 +148,10 @@ def fit_lightgbm(train, valid, cfg, seed):
 
 def segments(frame):
     """Named evaluation slices: train, valid, each test eval segment, whole test."""
-    q = frame["loan_id"].str[1:3].astype(int) * 4 + frame["loan_id"].str[4].astype(int) - 1
+    q = loan_quarter_index(frame["loan_id"])
     out = {"train": frame["segment"] == "train", "valid": frame["segment"] == "valid"}
     for e in load_cfg("split")["eval_segments"]:
-        lo = (int(e["start"][2:4])) * 4 + int(e["start"][5]) - 1
-        hi = (int(e["end"][2:4])) * 4 + int(e["end"][5]) - 1
+        lo, hi = quarter_index(e["start"]), quarter_index(e["end"])
         out[e["name"]] = (frame["segment"] == "test") & q.between(lo, hi)
     out["test"] = frame["segment"] == "test"
     return out
@@ -152,12 +165,18 @@ def run(frame, cfg, seed, reps):
     gb_pred, gb_info = fit_lightgbm(train, valid, cfg, seed)
     bins, level = cfg["evaluation"]["calibration_bins"], cfg["evaluation"]["ci_level"]
     sample, res = {}, {"scorecard": {**sc_info, "segments": {}}, "lightgbm": {**gb_info, "segments": {}}}
-    for name, m in segments(main).items():
-        d = main[m]
+    delta = {}
+    slices = {name: main[m] for name, m in segments(main).items()}
+    # Sensitivity: test segment with forbearance/disaster-flagged loans kept (main results drop them).
+    slices["test_incl_assisted"] = frame[frame["segment"] == "test"]
+    for name, d in slices.items():
         sample[name] = {"loans": int(len(d)), "bads": int(d.bad.sum()), "bad_rate": round(float(d.bad.mean()), R)}
-        for model, pred in (("scorecard", sc_pred), ("lightgbm", gb_pred)):
-            res[model]["segments"][name] = evaluate(d["bad"], pred(d), reps, rng, bins, level)
-    return {"sample": sample, **res}, {"scorecard": sc_pred, "lightgbm": gb_pred}
+        ev = evaluate(d["bad"], {"scorecard": sc_pred(d), "lightgbm": gb_pred(d)}, reps, rng, bins, level)
+        for model in ("scorecard", "lightgbm"):
+            res[model]["segments"][name] = ev[model]
+        delta[name] = ev["delta_auc"]
+    return {"sample": sample, "delta_auc_lightgbm_minus_scorecard": delta, **res}, \
+        {"scorecard": sc_pred, "lightgbm": gb_pred}
 
 
 def dev_frame(cfg, seed):
@@ -182,8 +201,8 @@ def calibration_figure(metrics, path):
     import matplotlib
     matplotlib.use("Agg")
     import matplotlib.pyplot as plt
-    names = [k for k in metrics["sample"] if k != "test"]
-    fig, axes = plt.subplots(1, len(names), figsize=(3.2 * len(names), 3.2), sharey=True)
+    names = [k for k in metrics["sample"] if k != "test_incl_assisted"]
+    fig, axes = plt.subplots(1, len(names), figsize=(3.2 * len(names), 3.2))
     for ax, name in zip(axes, names):
         top = 0
         for model, color in (("scorecard", "#2563eb"), ("lightgbm", "#ea580c")):

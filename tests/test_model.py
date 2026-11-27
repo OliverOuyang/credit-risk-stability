@@ -17,6 +17,14 @@ def test_auc_ks_match_reference():
     assert ks(y, s) == pytest.approx(ks_2samp(s[y == 1], s[y == 0]).statistic)
 
 
+def test_ks_groups_tied_scores():
+    s = np.array([0.1] * 100 + [0.9] * 50)
+    y1 = np.array([1] * 50 + [0] * 50 + [1] * 50)
+    y2 = np.array([0] * 50 + [1] * 50 + [1] * 50)  # same scores and labels, tie group reordered
+    ref = ks_2samp(s[y1 == 1], s[y1 == 0]).statistic
+    assert ks(y1, s) == pytest.approx(ref) and ks(y2, s) == pytest.approx(ref)
+
+
 def test_woe_bins_missing_rare_and_unseen():
     X = pd.DataFrame({"classic_fico": [600.0, 650, 700, 750, np.nan] * 40,
                       "channel": ["R", "R", "C", "C", "T"] * 39 + ["Z"] * 5})

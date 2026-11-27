@@ -16,9 +16,14 @@ def quarter_index(q):
     return int(q[:4]) * 4 + int(q[5]) - 1
 
 
-def segment_of(loan_id, segs):
+def loan_quarter_index(loan_id):
+    """Loan Identifier PYYQnXXXXXXX -> year*4 + quarter-1."""
     y = 2000 + loan_id.str[1:3].astype(int)
-    qi = (y - 100 * (y > 2090)) * 4 + loan_id.str[4].astype(int) - 1
+    return (y - 100 * (y > 2090)) * 4 + loan_id.str[4].astype(int) - 1  # shortcut: 2-digit year, valid 1991-2090
+
+
+def segment_of(loan_id, segs):
+    qi = loan_quarter_index(loan_id)
     seg = pd.Series(None, index=loan_id.index, dtype=object)
     for k, s in segs.items():
         seg[(qi >= quarter_index(s["start"])) & (qi <= quarter_index(s["end"]))] = k
@@ -30,7 +35,7 @@ def build(raw_dir):
     cols = {i: f["name"] for i, f in enumerate(feats)}  # origination file order = features.yaml order
     use = [f["name"] for f in feats if f.get("use")]
     segs = load_cfg("split")["segments"]
-    years = range(int(segs["train"]["start"][:4]), int(segs["test"]["end"][:4]) + 1)
+    years = sorted({y for s in segs.values() for y in range(int(s["start"][:4]), int(s["end"][:4]) + 1)})
     target = load_cfg("target")
     parts = []
     for y in years:
