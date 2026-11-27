@@ -61,7 +61,10 @@ def run(root=ROOT, frame=None):
 
     frame = load_frame(root) if frame is None else frame
     if frame is None:
+        print("[split] note: model frame absent, per-loan segment and censoring checks skipped")
         return v
+    print(f"[split] model frame checked: {len(frame)} rows, segments "
+          f"{frame['segment'].value_counts().sort_index().to_dict()}")
     multi = frame.groupby("loan_id")["segment"].nunique()
     for lid in multi[multi > 1].index:
         v.append(f"model frame: loan {lid} is in more than one segment")

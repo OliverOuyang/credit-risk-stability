@@ -15,20 +15,25 @@ from crs.frame import NUMERIC, loan_quarter_index, quarter_index
 R = 6  # decimals kept in metrics files
 
 
+def auc_ks(y, s):
+    """AUC (ties count half) and KS (thresholds between distinct scores) from one sort."""
+    o = np.argsort(s, kind="stable")
+    so, yo = s[o], y[o]
+    start = np.r_[0, np.flatnonzero(so[1:] != so[:-1]) + 1]
+    pos = np.add.reduceat(yo, start)
+    neg = np.diff(np.r_[start, len(yo)]) - pos
+    n1, n0 = pos.sum(), neg.sum()
+    auc = float((pos * (np.cumsum(neg) - neg + 0.5 * neg)).sum() / (n1 * n0))
+    ks = float(np.max(np.abs(np.cumsum(pos) / n1 - np.cumsum(neg) / n0)))
+    return auc, ks
+
+
 def auc(y, s):
-    r = pd.Series(s).rank().to_numpy()
-    n1 = y.sum()
-    n0 = len(y) - n1
-    return float((r[y == 1].sum() - n1 * (n1 + 1) / 2) / (n1 * n0))
+    return auc_ks(np.asarray(y), np.asarray(s))[0]
 
 
 def ks(y, s):
-    o = np.argsort(-s, kind="stable")
-    yo, so = y[o], s[o]
-    tpr = np.cumsum(yo) / yo.sum()
-    fpr = np.cumsum(1 - yo) / (len(yo) - yo.sum())
-    last = np.r_[so[1:] != so[:-1], True]  # only at thresholds between distinct scores (ties grouped)
-    return float(np.max(np.abs(tpr - fpr)[last]))
+    return auc_ks(np.asarray(y), np.asarray(s))[1]
 
 
 def interval(est, boot, level):
@@ -45,9 +50,10 @@ def evaluate(y, preds, reps, rng, bins, level):
         i = rng.integers(0, len(y), len(y))
         if 0 < y[i].sum() < len(i):
             for k, p in preds.items():
-                boot[k, "auc"].append(auc(y[i], p[i]))
-                boot[k, "ks"].append(ks(y[i], p[i]))
-    out = {k: {**{m: interval(fn(y, p), boot[k, m], level) for m, fn in (("auc", auc), ("ks", ks))},
+                a, b = auc_ks(y[i], p[i])
+                boot[k, "auc"].append(a)
+                boot[k, "ks"].append(b)
+    out = {k: {**{m: interval(v, boot[k, m], level) for m, v in zip(("auc", "ks"), auc_ks(y, p))},
                **calibration(y, p, bins)} for k, p in preds.items()}
     d = np.subtract(boot["lightgbm", "auc"], boot["scorecard", "auc"])
     out["delta_auc"] = interval(out["lightgbm"]["auc"]["est"] - out["scorecard"]["auc"]["est"], d, level)
