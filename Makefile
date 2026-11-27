@@ -1,4 +1,4 @@
-.PHONY: setup manifest verify-raw bad-counts test check all
+.PHONY: setup manifest verify-raw bad-counts frame model report test check all
 
 setup:
 	uv sync
@@ -15,6 +15,16 @@ verify-raw: manifest
 bad-counts:
 	PYTHONPATH=src uv run python -m crs.target data/raw > docs/bad_counts_raw.md
 
+# Needs data/raw. frame -> data/interim/model_frame.parquet; model -> outputs/metrics.json + figure.
+frame:
+	PYTHONPATH=src uv run python -m crs.frame
+
+model:
+	PYTHONPATH=src uv run python -m crs.model
+
+report:
+	PYTHONPATH=src uv run python -m crs.report
+
 test:
 	uv run pytest -q
 
@@ -24,4 +34,4 @@ CHECKS := leakage split repro numbers redline
 check: test
 	@fail=0; for c in $(CHECKS); do uv run python -m checks.check_$$c || fail=1; done; exit $$fail
 
-all: manifest bad-counts check
+all: manifest bad-counts frame model report check

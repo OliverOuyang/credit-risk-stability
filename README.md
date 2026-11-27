@@ -4,7 +4,7 @@
 
 An origination-time credit risk project on the Freddie Mac Single-Family Loan-Level Dataset (1999–2026). It builds a WOE scorecard and a LightGBM challenger, then measures how they decay across vintages that span the 2008 crisis and COVID forbearance, with a stability dashboard and business recommendations (cutoff, approval lift, limits of reject inference). Every number in the reports is rendered from `outputs/metrics.json` or `config/`, and `make check` enforces leakage, time-split, reproducibility, number-provenance and data red-line checks. Raw loan data is never committed.
 
-**Status:** data, target, split and the five `make check` checks are in place; modelling (scorecard + LightGBM) is next.
+**Status:** data, target, split, the five `make check` checks and both models are in place (`reports/model_comparison.md`); cross-vintage stability and recalibration are next.
 
 ## 这是什么
 
@@ -14,6 +14,7 @@ An origination-time credit risk project on the Freddie Mac Single-Family Loan-Le
 - 切分：按发放季度，训练 2005–2010、验证 2013–2014、跨期测试 2017–2024Q2，相邻段隔 24 个月防止标签成熟期重叠（`config/split.yaml`）。
 - 特征：只用发放时就知道的字段，每个字段标了可用时点（`config/features.yaml`）。
 - 字段说明：`docs/field_manual.md`；按年坏样本数：`docs/bad_counts.md`。
+- 模型：WOE 评分卡和 LightGBM 用同一切分，参数在 `config/model.yaml`；对比报告 `reports/model_comparison.md`（改模板 `reports/model_comparison.tmpl.md`，数字全部来自 `outputs/metrics.json`）。
 
 ## 怎么跑
 
@@ -22,6 +23,9 @@ make setup        # 安装依赖、启用提交钩子
 # 把 Clarity 下载的 sample_YYYY.zip 解压到 data/raw/（不进仓库）
 make manifest     # 原始文件 sha256 → data/manifest.sha256
 make bad-counts   # 按年坏样本数 → docs/bad_counts_raw.md
+make frame        # 建模表 → data/interim/model_frame.parquet（不进仓库）
+make model        # 评分卡 + LightGBM → outputs/metrics.json、reports/figures/calibration.png
+make report       # reports/*.tmpl.md 的占位符 → reports/*.md
 make check
 ```
 

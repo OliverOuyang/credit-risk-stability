@@ -115,13 +115,13 @@ def dev_cmd(out, expr):
 def test_repro_rejects_nondeterministic_dev_run(repo):
     out = repo / "dev.json"
     edit_yaml(repo, "repro", lambda d: d.update(dev_command=dev_cmd(out, "random.random()"),
-                                                  dev_output="dev.json"))
+                                                  dev_output="dev.json", reference=None))
     assert any("auc" in v for v in check_repro.run(repo))
 
 
 def test_repro_accepts_deterministic_and_checks_reference(repo):
     out = repo / "dev.json"
-    edit_yaml(repo, "repro", lambda d: d.update(dev_command=dev_cmd(out, "0.75"), dev_output="dev.json"))
+    edit_yaml(repo, "repro", lambda d: d.update(dev_command=dev_cmd(out, "0.75"), dev_output="dev.json", reference=None))
     assert check_repro.run(repo) == []
     write(repo, "outputs/dev_metrics_reference.json", json.dumps({"auc": 0.7}))
     edit_yaml(repo, "repro", lambda d: d.update(reference="outputs/dev_metrics_reference.json"))

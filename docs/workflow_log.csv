@@ -1,3 +1,4 @@
 issue,wall_hours,runs,rework,reviewer_findings,check_blocks,human_touches,stuck,regression
 MULT-413,5.4,7,0,0,0,6,"NotebookLM 登录过期（托管浏览器未登录）转副手修；全量文件每年 3.2 GB 放弃，改合并年份",
 MULT-414,0.4,1,0,0,0,0,"仓库没绑到 Multica 工作区，repo checkout 失败改用 gh clone；shell 的 cp 别名带交互确认，卡住一次",
+MULT-415,1.2,1,0,,0,0,"multica 服务器 TLS 握手超时，加 GODEBUG=tlsmlkem=0 恢复；github 直连 SSL 失败走本机代理；合成开发子集里 set 顺序随哈希变，两次结果不一致，被 check_repro 拦下后改成固定顺序；数据量单机 3 分钟跑完，没切 Colab",

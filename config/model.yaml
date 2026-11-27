@@ -1,0 +1,26 @@
+# src/crs/model.py. Seed comes from config/repro.yaml. Main sample: excluded and assisted loans dropped.
+woe:
+  max_bins: 10          # numeric: train quantile bins, plus one bin for missing
+  min_bin_share: 0.01   # categorical levels below this share of train go to "_other"
+  smoothing: 0.5        # added to bad and good counts per bin
+  iv_min: 0.02          # features below this information value are dropped from the scorecard
+logistic:
+  C: 1.0
+lightgbm:
+  learning_rate: 0.05
+  num_leaves: 31
+  min_child_samples: 200
+  feature_fraction: 0.8
+  lambda_l2: 1.0
+  cat_smooth: 50
+  min_data_per_group: 200
+  max_rounds: 2000
+  early_stopping_rounds: 100   # on validation AUC
+  num_threads: 4
+evaluation:
+  bootstrap_reps: 200   # percentile intervals for AUC and KS
+  ci_level: 0.95
+  calibration_bins: 10  # predicted-probability deciles within each segment
+dev:                    # synthetic subset for check_repro (runs in CI, no raw data)
+  loans_per_segment: 3000
+  bootstrap_reps: 20
