@@ -15,13 +15,15 @@ censoring:
   # Calendar censoring, not per-loan observed months:
   # keep a loan only if first_payment_date + (performance_months - 1) months <= performance_cutoff.
   rule: calendar
-  performance_cutoff: "2026-06"  # Release 48 (2026-10-28) release notes; re-verify against downloaded files
+  performance_cutoff: "2026-06"  # Release 48; verified: max period in sample_perf files = 202606
 assistance:
   # COVID / disaster relief: Freddie's delinquency status is DDLPI-based, so loans in forbearance
   # can show as delinquent. Flag them; main results exclude, appendix shows sensitivity.
   flag_if_any_in_window:
-    borrower_assistance_plan: [F, R, T]  # forbearance, repayment, trial period
+    # Only relief that suspends payments. R/T plans and payment deferrals usually follow an
+    # ordinary delinquency, so flagging them would drop genuine defaults (2016 vintage: main bads 95 -> 159 after narrowing).
+    borrower_assistance_plan: [F]        # forbearance
     delinquency_due_to_disaster: [Y]
-    payment_deferral_flag: [C, P]
+    payment_deferral_flag: []
   populated_from: "2014-01"     # both assistance fields only populated for Jan 2014 and later periods
   main_result: exclude_flagged
