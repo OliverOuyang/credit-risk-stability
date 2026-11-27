@@ -44,17 +44,20 @@ def run(root=ROOT, frame=None):
 
     frame = load_frame(root) if frame is None else frame
     if frame is None:
+        print("[leakage] note: model frame absent, column and single-feature AUC checks skipped")
         return v
     for c in sorted(set(frame.columns) - FRAME_META - set(model)):
         v.append(f"model frame: column {c} is not a use:true origination feature in features.yaml")
     fit = frame[frame["segment"] == "train"] if "segment" in frame else frame
     threshold = allow_cfg.get("auc_threshold", 0.85)
-    for c in model:
-        if c in fit and c not in allowed:
-            auc = single_auc(fit[c], fit["bad"])
-            if auc > threshold:
-                v.append(f"model frame: {c} single-feature AUC {auc:.3f} > {threshold}; "
-                         f"confirm and add to leakage_allowlist.yaml, or drop it")
+    aucs = {c: single_auc(fit[c], fit["bad"]) for c in model if c in fit}
+    for c, auc in aucs.items():
+        if auc > threshold and c not in allowed:
+            v.append(f"model frame: {c} single-feature AUC {auc:.3f} > {threshold}; "
+                     f"confirm and add to leakage_allowlist.yaml, or drop it")
+    top = max(aucs, key=aucs.get, default=None)
+    print(f"[leakage] model frame checked: {len(frame)} rows, {frame.shape[1]} cols, "
+          f"max single-feature AUC {top} {aucs.get(top, float('nan')):.3f}")
     return v
 
 

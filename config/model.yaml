@@ -18,7 +18,7 @@ lightgbm:
   early_stopping_rounds: 100   # on validation AUC
   num_threads: 4
 evaluation:
-  bootstrap_reps: 200   # percentile intervals for AUC and KS
+  bootstrap_reps: 2000  # percentile intervals for AUC, KS, paired AUC difference
   ci_level: 0.95
   calibration_bins: 10  # predicted-probability deciles within each segment
 dev:                    # synthetic subset for check_repro (runs in CI, no raw data)
