@@ -1,0 +1,27 @@
+# Default (bad) definition. Source: Freddie Mac SFLLD User Guide (Oct 2026) and file_layout.xlsx.
+observation_point: origination
+performance_months: 24          # window = loan age 1..24 (months since first payment date)
+bad_if_any_in_window:
+  delinquency_status_min: 3     # "Current Loan Delinquency Status" 03 = 90-119 days, capped at 99
+  delinquency_status_codes: [RA]  # REO Acquisition
+  zero_balance_codes: ["02", "03", "09"]  # third party sale, short sale/charge off, REO disposition
+good_if:
+  # Prepaid (ZBC 01) or still active at month 24 with no bad event before -> good; never dropped.
+  prepaid_kept_as_good: true
+exclude:
+  zero_balance_codes: ["96"]    # confirmed underwriting/servicing defect before credit event
+  delinquency_status_codes: [XX]  # not available in window -> loan excluded
+censoring:
+  # Calendar censoring, not per-loan observed months:
+  # keep a loan only if first_payment_date + (performance_months - 1) months <= performance_cutoff.
+  rule: calendar
+  performance_cutoff: "2026-06"  # Release 48 (2026-10-28) release notes; re-verify against downloaded files
+assistance:
+  # COVID / disaster relief: Freddie's delinquency status is DDLPI-based, so loans in forbearance
+  # can show as delinquent. Flag them; main results exclude, appendix shows sensitivity.
+  flag_if_any_in_window:
+    borrower_assistance_plan: [F, R, T]  # forbearance, repayment, trial period
+    delinquency_due_to_disaster: [Y]
+    payment_deferral_flag: [C, P]
+  populated_from: "2014-01"     # both assistance fields only populated for Jan 2014 and later periods
+  main_result: exclude_flagged

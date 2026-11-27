@@ -1,0 +1,43 @@
+# Every column with its availability time. check_leakage.py (2b) rejects any model feature
+# whose available_at is not "origination". use: false = known at origination but not a model input.
+# Field names follow file_layout.xlsx (Release 47+ layout, 31 origination / 35 performance fields).
+origination:
+  - {name: classic_fico,               available_at: origination, use: true}
+  - {name: first_payment_date,         available_at: origination, use: false, why: censoring/window anchor}
+  - {name: first_time_homebuyer,       available_at: origination, use: true}
+  - {name: maturity_date,              available_at: origination, use: false, why: redundant with loan term}
+  - {name: msa,                        available_at: origination, use: true}
+  - {name: mi_pct,                     available_at: origination, use: true}
+  - {name: number_of_units,            available_at: origination, use: true}
+  - {name: occupancy_status,           available_at: origination, use: true}
+  - {name: original_cltv,              available_at: origination, use: true}
+  - {name: original_dti,               available_at: origination, use: true}
+  - {name: original_upb,               available_at: origination, use: true}
+  - {name: original_ltv,               available_at: origination, use: true}
+  - {name: original_interest_rate,     available_at: origination, use: true}
+  - {name: channel,                    available_at: origination, use: true}
+  - {name: prepayment_penalty,         available_at: origination, use: true}
+  - {name: amortization_type,          available_at: origination, use: true}
+  - {name: property_state,             available_at: origination, use: true}
+  - {name: property_type,              available_at: origination, use: true}
+  - {name: postal_code,                available_at: origination, use: false, why: 3-digit zip, too granular; state/msa used}
+  - {name: loan_id,                    available_at: origination, use: false, why: identifier; carries vintage quarter}
+  - {name: loan_purpose,               available_at: origination, use: true}
+  - {name: original_loan_term,         available_at: origination, use: true}
+  - {name: number_of_borrowers,        available_at: origination, use: true}
+  - {name: seller_name,                available_at: origination, use: false, why: entity name, unstable over time}
+  - {name: super_conforming_flag,      available_at: origination, use: true}
+  - {name: pre_harp_loan_id,           available_at: origination, use: false, why: identifier}
+  - {name: special_eligibility_program, available_at: origination, use: true}
+  - {name: harp_indicator,             available_at: origination, use: true}
+  - {name: property_valuation_method,  available_at: origination, use: true}
+  - {name: interest_only_indicator,    available_at: origination, use: true}
+  - {name: vantagescore_4,             available_at: origination, use: false, why: new field (Release 47), coverage unknown for old vintages; check in 2a}
+# Performance-file fields: label construction only, never model inputs.
+performance:
+  available_at: performance
+  used_for_target: [current_loan_delinquency_status, loan_age, zero_balance_code,
+                    zero_balance_effective_date, borrower_assistance_plan,
+                    delinquency_due_to_disaster, payment_deferral_flag]
+  others: all remaining 28 monthly fields (UPB, rates, losses, ELTV, servicer name, ...)
+loan_id_regex: "^[FA][0-9]{2}Q[1-4][0-9]{7}$"   # PYYQnXXXXXXX; P = product (F fixed, A ARM) (User Guide, Loan Identifier)
