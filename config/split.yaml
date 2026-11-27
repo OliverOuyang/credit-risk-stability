@@ -4,11 +4,14 @@
 gap_months: 24
 segments:
   train: {start: "2005Q1", end: "2010Q4"}
-  valid: {start: "2013Q1", end: "2013Q4"}
-  test:  {start: "2016Q1", end: "2024Q2"}   # 2024Q2 + 24m = 2026Q2 = Release 48 performance cutoff
-evaluation_unit: origination_year           # test is scored year by year
+  valid: {start: "2013Q1", end: "2014Q4"}   # 2013+2014 merged: 255 + 274 = 529 bads (sample)
+  test:  {start: "2017Q1", end: "2024Q2"}   # 2014Q4 + 24m = 2016Q4; 2024Q2 + 24m = 2026Q2 = perf cutoff
+# Test evaluation segments; bad counts from docs/bad_counts_raw.md (main sample).
+eval_segments:
+  - {name: "2017-2019", start: "2017Q1", end: "2019Q4", source: sample}  # 235 + 166 + 108 = 509
+  - {name: "2020",      start: "2020Q1", end: "2020Q4", source: full}    # sample 102; full-volume file
+  - {name: "2021",      start: "2021Q1", end: "2021Q4", source: full}    # sample 146; full-volume file
+  - {name: "2022",      start: "2022Q1", end: "2022Q4", source: sample}  # 401
+  - {name: "2023-2024", start: "2023Q1", end: "2024Q2", source: sample}  # 432 + 213 = 645
 min_bads_per_eval_segment: 300
-if_below_min_bads:                           # applied in order until every segment has >= 300 bads
-  - use_full_volume_files_for_year           # full quarterly files instead of 50k sample
-  - merge_adjacent_years
-draft: true   # finalised in 2a after per-year bad counts; see docs/bad_counts.md
+draft: true   # false once 2020/2021 full-volume bad counts are >= 300
