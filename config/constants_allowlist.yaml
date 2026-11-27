@@ -3,3 +3,4 @@
 #   - {name: "...", values: [0.1], source: "where this constant comes from"}
 constants:
   - {name: PSI stable / shift / major-shift thresholds, values: [0.1, 0.25], source: "industry convention (Siddiqi, Credit Risk Scorecards, 2006)"}
+  - {name: 90+ days delinquent (status 03 = 90-119 days), values: [90], source: "Freddie Mac SFLLD User Guide, Current Loan Delinquency Status"}

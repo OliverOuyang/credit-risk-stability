@@ -4,7 +4,7 @@
 #   null until 2c adds the model pipeline; then only uv.lock is checked.
 # reference: optional committed dev metrics; the fresh run must match it (clean-environment check in CI).
 seed: 20261127
-dev_command: null
+dev_command: PYTHONPATH=src uv run python -m crs.model --dev
 dev_output: outputs/dev_metrics.json
-reference: null
+reference: outputs/dev_metrics_reference.json
 tolerance: 1.0e-6

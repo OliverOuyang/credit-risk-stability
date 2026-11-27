@@ -1,0 +1,1303 @@
+{
+ "delta_auc_lightgbm_minus_scorecard": {
+  "2017-2019": {
+   "est": 0.007771,
+   "hi": 0.01683,
+   "lo": -0.00085
+  },
+  "2020-2022": {
+   "est": 0.003646,
+   "hi": 0.012283,
+   "lo": -0.004964
+  },
+  "2023-2024": {
+   "est": -0.0089,
+   "hi": 0.000475,
+   "lo": -0.016192
+  },
+  "test": {
+   "est": 0.004402,
+   "hi": 0.008802,
+   "lo": -0.000859
+  },
+  "test_incl_assisted": {
+   "est": 0.003349,
+   "hi": 0.006254,
+   "lo": 0.000878
+  },
+  "train": {
+   "est": 0.029612,
+   "hi": 0.031429,
+   "lo": 0.027865
+  },
+  "valid": {
+   "est": 0.020851,
+   "hi": 0.032845,
+   "lo": 0.01006
+  }
+ },
+ "lightgbm": {
+  "best_iteration": 37,
+  "gain_share": {
+   "amortization_type": 0.0,
+   "channel": 0.006107,
+   "classic_fico": 0.405165,
+   "first_time_homebuyer": 0.0,
+   "harp_indicator": 0.000168,
+   "interest_only_indicator": 0.0,
+   "loan_purpose": 0.021096,
+   "mi_pct": 0.008587,
+   "msa": 0.087921,
+   "number_of_borrowers": 0.051802,
+   "number_of_units": 0.000293,
+   "occupancy_status": 0.000583,
+   "original_cltv": 0.045173,
+   "original_dti": 0.039544,
+   "original_interest_rate": 0.1741,
+   "original_loan_term": 0.01064,
+   "original_ltv": 0.071447,
+   "original_upb": 0.036415,
+   "prepayment_penalty": 0.0,
+   "property_state": 0.040454,
+   "property_type": 0.000507,
+   "property_valuation_method": 0.0,
+   "special_eligibility_program": 0.0,
+   "super_conforming_flag": 0.0
+  },
+  "segments": {
+   "2017-2019": {
+    "auc": {
+     "est": 0.75248,
+     "hi": 0.771141,
+     "lo": 0.732773
+    },
+    "bad_rate": 0.003542,
+    "brier": 0.003685,
+    "calibration": [
+     {
+      "bad_rate": 0.000417,
+      "bin": 0,
+      "mean_pred": 0.006623,
+      "n": 14372
+     },
+     {
+      "bad_rate": 0.000974,
+      "bin": 1,
+      "mean_pred": 0.007185,
+      "n": 14372
+     },
+     {
+      "bad_rate": 0.000765,
+      "bin": 2,
+      "mean_pred": 0.007956,
+      "n": 14372
+     },
+     {
+      "bad_rate": 0.00174,
+      "bin": 3,
+      "mean_pred": 0.008996,
+      "n": 14371
+     },
+     {
+      "bad_rate": 0.001879,
+      "bin": 4,
+      "mean_pred": 0.010234,
+      "n": 14372
+     },
+     {
+      "bad_rate": 0.002435,
+      "bin": 5,
+      "mean_pred": 0.011869,
+      "n": 14372
+     },
+     {
+      "bad_rate": 0.002714,
+      "bin": 6,
+      "mean_pred": 0.013986,
+      "n": 14371
+     },
+     {
+      "bad_rate": 0.004731,
+      "bin": 7,
+      "mean_pred": 0.016959,
+      "n": 14372
+     },
+     {
+      "bad_rate": 0.007515,
+      "bin": 8,
+      "mean_pred": 0.021682,
+      "n": 14372
+     },
+     {
+      "bad_rate": 0.012246,
+      "bin": 9,
+      "mean_pred": 0.037898,
+      "n": 14372
+     }
+    ],
+    "ks": {
+     "est": 0.393803,
+     "hi": 0.428925,
+     "lo": 0.36319
+    },
+    "mean_pred": 0.014339
+   },
+   "2020-2022": {
+    "auc": {
+     "est": 0.766468,
+     "hi": 0.783744,
+     "lo": 0.745012
+    },
+    "bad_rate": 0.004411,
+    "brier": 0.004725,
+    "calibration": [
+     {
+      "bad_rate": 0.000544,
+      "bin": 0,
+      "mean_pred": 0.006548,
+      "n": 14714
+     },
+     {
+      "bad_rate": 0.001359,
+      "bin": 1,
+      "mean_pred": 0.00695,
+      "n": 14714
+     },
+     {
+      "bad_rate": 0.001155,
+      "bin": 2,
+      "mean_pred": 0.007607,
+      "n": 14713
+     },
+     {
+      "bad_rate": 0.001291,
+      "bin": 3,
+      "mean_pred": 0.008577,
+      "n": 14714
+     },
+     {
+      "bad_rate": 0.002447,
+      "bin": 4,
+      "mean_pred": 0.009823,
+      "n": 14713
+     },
+     {
+      "bad_rate": 0.002651,
+      "bin": 5,
+      "mean_pred": 0.011508,
+      "n": 14714
+     },
+     {
+      "bad_rate": 0.00401,
+      "bin": 6,
+      "mean_pred": 0.013827,
+      "n": 14713
+     },
+     {
+      "bad_rate": 0.004757,
+      "bin": 7,
+      "mean_pred": 0.017172,
+      "n": 14714
+     },
+     {
+      "bad_rate": 0.008972,
+      "bin": 8,
+      "mean_pred": 0.023055,
+      "n": 14713
+     },
+     {
+      "bad_rate": 0.016923,
+      "bin": 9,
+      "mean_pred": 0.055246,
+      "n": 14714
+     }
+    ],
+    "ks": {
+     "est": 0.413906,
+     "hi": 0.451252,
+     "lo": 0.384522
+    },
+    "mean_pred": 0.016031
+   },
+   "2023-2024": {
+    "auc": {
+     "est": 0.764579,
+     "hi": 0.779145,
+     "lo": 0.749296
+    },
+    "bad_rate": 0.009245,
+    "brier": 0.012472,
+    "calibration": [
+     {
+      "bad_rate": 0.001147,
+      "bin": 0,
+      "mean_pred": 0.008689,
+      "n": 6977
+     },
+     {
+      "bad_rate": 0.001147,
+      "bin": 1,
+      "mean_pred": 0.011131,
+      "n": 6977
+     },
+     {
+      "bad_rate": 0.002437,
+      "bin": 2,
+      "mean_pred": 0.013737,
+      "n": 6977
+     },
+     {
+      "bad_rate": 0.00215,
+      "bin": 3,
+      "mean_pred": 0.017194,
+      "n": 6976
+     },
+     {
+      "bad_rate": 0.004443,
+      "bin": 4,
+      "mean_pred": 0.02179,
+      "n": 6977
+     },
+     {
+      "bad_rate": 0.005733,
+      "bin": 5,
+      "mean_pred": 0.028025,
+      "n": 6977
+     },
+     {
+      "bad_rate": 0.010178,
+      "bin": 6,
+      "mean_pred": 0.037355,
+      "n": 6976
+     },
+     {
+      "bad_rate": 0.015766,
+      "bin": 7,
+      "mean_pred": 0.052178,
+      "n": 6977
+     },
+     {
+      "bad_rate": 0.020496,
+      "bin": 8,
+      "mean_pred": 0.080592,
+      "n": 6977
+     },
+     {
+      "bad_rate": 0.028952,
+      "bin": 9,
+      "mean_pred": 0.178442,
+      "n": 6977
+     }
+    ],
+    "ks": {
+     "est": 0.421363,
+     "hi": 0.454199,
+     "lo": 0.39756
+    },
+    "mean_pred": 0.044914
+   },
+   "test": {
+    "auc": {
+     "est": 0.775465,
+     "hi": 0.785076,
+     "lo": 0.764431
+    },
+    "bad_rate": 0.005,
+    "brier": 0.005809,
+    "calibration": [
+     {
+      "bad_rate": 0.000638,
+      "bin": 0,
+      "mean_pred": 0.00663,
+      "n": 36063
+     },
+     {
+      "bad_rate": 0.001054,
+      "bin": 1,
+      "mean_pred": 0.007278,
+      "n": 36062
+     },
+     {
+      "bad_rate": 0.000971,
+      "bin": 2,
+      "mean_pred": 0.008272,
+      "n": 36062
+     },
+     {
+      "bad_rate": 0.002052,
+      "bin": 3,
+      "mean_pred": 0.009562,
+      "n": 36062
+     },
+     {
+      "bad_rate": 0.00244,
+      "bin": 4,
+      "mean_pred": 0.011164,
+      "n": 36062
+     },
+     {
+      "bad_rate": 0.003078,
+      "bin": 5,
+      "mean_pred": 0.013306,
+      "n": 36062
+     },
+     {
+      "bad_rate": 0.00366,
+      "bin": 6,
+      "mean_pred": 0.016247,
+      "n": 36062
+     },
+     {
+      "bad_rate": 0.006101,
+      "bin": 7,
+      "mean_pred": 0.02075,
+      "n": 36062
+     },
+     {
+      "bad_rate": 0.010038,
+      "bin": 8,
+      "mean_pred": 0.029624,
+      "n": 36062
+     },
+     {
+      "bad_rate": 0.019965,
+      "bin": 9,
+      "mean_pred": 0.086612,
+      "n": 36063
+     }
+    ],
+    "ks": {
+     "est": 0.427864,
+     "hi": 0.449519,
+     "lo": 0.410839
+    },
+    "mean_pred": 0.020945
+   },
+   "test_incl_assisted": {
+    "auc": {
+     "est": 0.705089,
+     "hi": 0.710452,
+     "lo": 0.700258
+    },
+    "bad_rate": 0.020343,
+    "brier": 0.020185,
+    "calibration": [
+     {
+      "bad_rate": 0.003434,
+      "bin": 0,
+      "mean_pred": 0.006634,
+      "n": 36987
+     },
+     {
+      "bad_rate": 0.005462,
+      "bin": 1,
+      "mean_pred": 0.007302,
+      "n": 36986
+     },
+     {
+      "bad_rate": 0.008355,
+      "bin": 2,
+      "mean_pred": 0.008325,
+      "n": 36986
+     },
+     {
+      "bad_rate": 0.011572,
+      "bin": 3,
+      "mean_pred": 0.009636,
+      "n": 36986
+     },
+     {
+      "bad_rate": 0.013708,
+      "bin": 4,
+      "mean_pred": 0.011281,
+      "n": 36986
+     },
+     {
+      "bad_rate": 0.017358,
+      "bin": 5,
+      "mean_pred": 0.013463,
+      "n": 36986
+     },
+     {
+      "bad_rate": 0.023333,
+      "bin": 6,
+      "mean_pred": 0.016465,
+      "n": 36986
+     },
+     {
+      "bad_rate": 0.03139,
+      "bin": 7,
+      "mean_pred": 0.021039,
+      "n": 36986
+     },
+     {
+      "bad_rate": 0.039961,
+      "bin": 8,
+      "mean_pred": 0.030038,
+      "n": 36986
+     },
+     {
+      "bad_rate": 0.048855,
+      "bin": 9,
+      "mean_pred": 0.087746,
+      "n": 36987
+     }
+    ],
+    "ks": {
+     "est": 0.314717,
+     "hi": 0.325415,
+     "lo": 0.306264
+    },
+    "mean_pred": 0.021193
+   },
+   "train": {
+    "auc": {
+     "est": 0.882269,
+     "hi": 0.885413,
+     "lo": 0.879201
+    },
+    "bad_rate": 0.027973,
+    "brier": 0.024403,
+    "calibration": [
+     {
+      "bad_rate": 0.000502,
+      "bin": 0,
+      "mean_pred": 0.00665,
+      "n": 29893
+     },
+     {
+      "bad_rate": 0.000903,
+      "bin": 1,
+      "mean_pred": 0.00756,
+      "n": 29893
+     },
+     {
+      "bad_rate": 0.001472,
+      "bin": 2,
+      "mean_pred": 0.008681,
+      "n": 29892
+     },
+     {
+      "bad_rate": 0.002609,
+      "bin": 3,
+      "mean_pred": 0.01017,
+      "n": 29893
+     },
+     {
+      "bad_rate": 0.004951,
+      "bin": 4,
+      "mean_pred": 0.012285,
+      "n": 29892
+     },
+     {
+      "bad_rate": 0.008062,
+      "bin": 5,
+      "mean_pred": 0.015582,
+      "n": 29893
+     },
+     {
+      "bad_rate": 0.015523,
+      "bin": 6,
+      "mean_pred": 0.020941,
+      "n": 29892
+     },
+     {
+      "bad_rate": 0.026595,
+      "bin": 7,
+      "mean_pred": 0.030555,
+      "n": 29893
+     },
+     {
+      "bad_rate": 0.053024,
+      "bin": 8,
+      "mean_pred": 0.050322,
+      "n": 29892
+     },
+     {
+      "bad_rate": 0.166092,
+      "bin": 9,
+      "mean_pred": 0.118783,
+      "n": 29893
+     }
+    ],
+    "ks": {
+     "est": 0.60864,
+     "hi": 0.617802,
+     "lo": 0.60128
+    },
+    "mean_pred": 0.028153
+   },
+   "valid": {
+    "auc": {
+     "est": 0.816151,
+     "hi": 0.831764,
+     "lo": 0.799281
+    },
+    "bad_rate": 0.00531,
+    "brier": 0.005325,
+    "calibration": [
+     {
+      "bad_rate": 0.0001,
+      "bin": 0,
+      "mean_pred": 0.006571,
+      "n": 9963
+     },
+     {
+      "bad_rate": 0.000903,
+      "bin": 1,
+      "mean_pred": 0.006964,
+      "n": 9963
+     },
+     {
+      "bad_rate": 0.001004,
+      "bin": 2,
+      "mean_pred": 0.007568,
+      "n": 9962
+     },
+     {
+      "bad_rate": 0.001305,
+      "bin": 3,
+      "mean_pred": 0.008456,
+      "n": 9963
+     },
+     {
+      "bad_rate": 0.001907,
+      "bin": 4,
+      "mean_pred": 0.009598,
+      "n": 9963
+     },
+     {
+      "bad_rate": 0.00261,
+      "bin": 5,
+      "mean_pred": 0.01113,
+      "n": 9962
+     },
+     {
+      "bad_rate": 0.003413,
+      "bin": 6,
+      "mean_pred": 0.013405,
+      "n": 9963
+     },
+     {
+      "bad_rate": 0.006324,
+      "bin": 7,
+      "mean_pred": 0.016773,
+      "n": 9962
+     },
+     {
+      "bad_rate": 0.009636,
+      "bin": 8,
+      "mean_pred": 0.022851,
+      "n": 9963
+     },
+     {
+      "bad_rate": 0.025896,
+      "bin": 9,
+      "mean_pred": 0.043715,
+      "n": 9963
+     }
+    ],
+    "ks": {
+     "est": 0.496616,
+     "hi": 0.537995,
+     "lo": 0.465396
+    },
+    "mean_pred": 0.014703
+   }
+  }
+ },
+ "sample": {
+  "2017-2019": {
+   "bad_rate": 0.003542,
+   "bads": 509,
+   "loans": 143718
+  },
+  "2020-2022": {
+   "bad_rate": 0.004411,
+   "bads": 649,
+   "loans": 147136
+  },
+  "2023-2024": {
+   "bad_rate": 0.009245,
+   "bads": 645,
+   "loans": 69768
+  },
+  "test": {
+   "bad_rate": 0.005,
+   "bads": 1803,
+   "loans": 360622
+  },
+  "test_incl_assisted": {
+   "bad_rate": 0.020343,
+   "bads": 7524,
+   "loans": 369862
+  },
+  "train": {
+   "bad_rate": 0.027973,
+   "bads": 8362,
+   "loans": 298926
+  },
+  "valid": {
+   "bad_rate": 0.00531,
+   "bads": 529,
+   "loans": 99627
+  }
+ },
+ "scorecard": {
+  "features": {
+   "amortization_type": {
+    "iv": 0.0,
+    "kept": false
+   },
+   "channel": {
+    "coef": 0.14217,
+    "iv": 0.192485,
+    "kept": true
+   },
+   "classic_fico": {
+    "coef": 0.803643,
+    "iv": 1.136816,
+    "kept": true
+   },
+   "first_time_homebuyer": {
+    "iv": 0.003642,
+    "kept": false
+   },
+   "harp_indicator": {
+    "iv": 0.007536,
+    "kept": false
+   },
+   "interest_only_indicator": {
+    "iv": 0.0,
+    "kept": false
+   },
+   "loan_purpose": {
+    "coef": 0.336551,
+    "iv": 0.025912,
+    "kept": true
+   },
+   "mi_pct": {
+    "coef": 0.017951,
+    "iv": 0.197938,
+    "kept": true
+   },
+   "msa": {
+    "coef": 0.548895,
+    "iv": 0.047776,
+    "kept": true
+   },
+   "number_of_borrowers": {
+    "coef": 0.887656,
+    "iv": 0.173406,
+    "kept": true
+   },
+   "number_of_units": {
+    "iv": 0.000134,
+    "kept": false
+   },
+   "occupancy_status": {
+    "iv": 0.01003,
+    "kept": false
+   },
+   "original_cltv": {
+    "coef": 0.289633,
+    "iv": 0.351269,
+    "kept": true
+   },
+   "original_dti": {
+    "coef": 0.413721,
+    "iv": 0.290844,
+    "kept": true
+   },
+   "original_interest_rate": {
+    "coef": 0.566681,
+    "iv": 0.80356,
+    "kept": true
+   },
+   "original_loan_term": {
+    "coef": 0.259507,
+    "iv": 0.222392,
+    "kept": true
+   },
+   "original_ltv": {
+    "coef": 0.436029,
+    "iv": 0.392927,
+    "kept": true
+   },
+   "original_upb": {
+    "coef": 1.449505,
+    "iv": 0.025158,
+    "kept": true
+   },
+   "prepayment_penalty": {
+    "iv": 2e-06,
+    "kept": false
+   },
+   "property_state": {
+    "coef": 0.701911,
+    "iv": 0.135723,
+    "kept": true
+   },
+   "property_type": {
+    "iv": 0.006507,
+    "kept": false
+   },
+   "property_valuation_method": {
+    "iv": 0.0,
+    "kept": false
+   },
+   "special_eligibility_program": {
+    "iv": 0.0,
+    "kept": false
+   },
+   "super_conforming_flag": {
+    "iv": 0.01469,
+    "kept": false
+   }
+  },
+  "intercept": -3.607029,
+  "n_candidates": 24,
+  "n_kept": 13,
+  "segments": {
+   "2017-2019": {
+    "auc": {
+     "est": 0.744709,
+     "hi": 0.76507,
+     "lo": 0.723446
+    },
+    "bad_rate": 0.003542,
+    "brier": 0.003694,
+    "calibration": [
+     {
+      "bad_rate": 0.000557,
+      "bin": 0,
+      "mean_pred": 0.000448,
+      "n": 14372
+     },
+     {
+      "bad_rate": 0.001044,
+      "bin": 1,
+      "mean_pred": 0.001069,
+      "n": 14372
+     },
+     {
+      "bad_rate": 0.000974,
+      "bin": 2,
+      "mean_pred": 0.001733,
+      "n": 14372
+     },
+     {
+      "bad_rate": 0.00167,
+      "bin": 3,
+      "mean_pred": 0.00256,
+      "n": 14371
+     },
+     {
+      "bad_rate": 0.001531,
+      "bin": 4,
+      "mean_pred": 0.003645,
+      "n": 14372
+     },
+     {
+      "bad_rate": 0.002435,
+      "bin": 5,
+      "mean_pred": 0.005099,
+      "n": 14372
+     },
+     {
+      "bad_rate": 0.00341,
+      "bin": 6,
+      "mean_pred": 0.007204,
+      "n": 14371
+     },
+     {
+      "bad_rate": 0.004871,
+      "bin": 7,
+      "mean_pred": 0.010556,
+      "n": 14372
+     },
+     {
+      "bad_rate": 0.007028,
+      "bin": 8,
+      "mean_pred": 0.016888,
+      "n": 14372
+     },
+     {
+      "bad_rate": 0.011898,
+      "bin": 9,
+      "mean_pred": 0.043733,
+      "n": 14372
+     }
+    ],
+    "ks": {
+     "est": 0.382628,
+     "hi": 0.421275,
+     "lo": 0.34939
+    },
+    "mean_pred": 0.009294
+   },
+   "2020-2022": {
+    "auc": {
+     "est": 0.762822,
+     "hi": 0.779892,
+     "lo": 0.744853
+    },
+    "bad_rate": 0.004411,
+    "brier": 0.004639,
+    "calibration": [
+     {
+      "bad_rate": 0.00068,
+      "bin": 0,
+      "mean_pred": 0.000363,
+      "n": 14714
+     },
+     {
+      "bad_rate": 0.001019,
+      "bin": 1,
+      "mean_pred": 0.000866,
+      "n": 14714
+     },
+     {
+      "bad_rate": 0.001563,
+      "bin": 2,
+      "mean_pred": 0.001458,
+      "n": 14713
+     },
+     {
+      "bad_rate": 0.001427,
+      "bin": 3,
+      "mean_pred": 0.002228,
+      "n": 14714
+     },
+     {
+      "bad_rate": 0.001835,
+      "bin": 4,
+      "mean_pred": 0.003282,
+      "n": 14713
+     },
+     {
+      "bad_rate": 0.002718,
+      "bin": 5,
+      "mean_pred": 0.004786,
+      "n": 14714
+     },
+     {
+      "bad_rate": 0.004078,
+      "bin": 6,
+      "mean_pred": 0.007065,
+      "n": 14713
+     },
+     {
+      "bad_rate": 0.005641,
+      "bin": 7,
+      "mean_pred": 0.010799,
+      "n": 14714
+     },
+     {
+      "bad_rate": 0.008224,
+      "bin": 8,
+      "mean_pred": 0.018353,
+      "n": 14713
+     },
+     {
+      "bad_rate": 0.016923,
+      "bin": 9,
+      "mean_pred": 0.056772,
+      "n": 14714
+     }
+    ],
+    "ks": {
+     "est": 0.404063,
+     "hi": 0.443199,
+     "lo": 0.382804
+    },
+    "mean_pred": 0.010597
+   },
+   "2023-2024": {
+    "auc": {
+     "est": 0.773479,
+     "hi": 0.787241,
+     "lo": 0.758905
+    },
+    "bad_rate": 0.009245,
+    "brier": 0.011714,
+    "calibration": [
+     {
+      "bad_rate": 0.000573,
+      "bin": 0,
+      "mean_pred": 0.002508,
+      "n": 6977
+     },
+     {
+      "bad_rate": 0.001147,
+      "bin": 1,
+      "mean_pred": 0.006262,
+      "n": 6977
+     },
+     {
+      "bad_rate": 0.002293,
+      "bin": 2,
+      "mean_pred": 0.010191,
+      "n": 6977
+     },
+     {
+      "bad_rate": 0.003727,
+      "bin": 3,
+      "mean_pred": 0.014824,
+      "n": 6976
+     },
+     {
+      "bad_rate": 0.004443,
+      "bin": 4,
+      "mean_pred": 0.02079,
+      "n": 6977
+     },
+     {
+      "bad_rate": 0.00602,
+      "bin": 5,
+      "mean_pred": 0.02868,
+      "n": 6977
+     },
+     {
+      "bad_rate": 0.008314,
+      "bin": 6,
+      "mean_pred": 0.039832,
+      "n": 6976
+     },
+     {
+      "bad_rate": 0.014189,
+      "bin": 7,
+      "mean_pred": 0.056446,
+      "n": 6977
+     },
+     {
+      "bad_rate": 0.017629,
+      "bin": 8,
+      "mean_pred": 0.084092,
+      "n": 6977
+     },
+     {
+      "bad_rate": 0.034112,
+      "bin": 9,
+      "mean_pred": 0.161192,
+      "n": 6977
+     }
+    ],
+    "ks": {
+     "est": 0.423719,
+     "hi": 0.456033,
+     "lo": 0.396943
+    },
+    "mean_pred": 0.042482
+   },
+   "test": {
+    "auc": {
+     "est": 0.771063,
+     "hi": 0.781425,
+     "lo": 0.759883
+    },
+    "bad_rate": 0.005,
+    "brier": 0.005631,
+    "calibration": [
+     {
+      "bad_rate": 0.000721,
+      "bin": 0,
+      "mean_pred": 0.000462,
+      "n": 36063
+     },
+     {
+      "bad_rate": 0.000943,
+      "bin": 1,
+      "mean_pred": 0.001153,
+      "n": 36062
+     },
+     {
+      "bad_rate": 0.001414,
+      "bin": 2,
+      "mean_pred": 0.001981,
+      "n": 36062
+     },
+     {
+      "bad_rate": 0.001608,
+      "bin": 3,
+      "mean_pred": 0.003096,
+      "n": 36062
+     },
+     {
+      "bad_rate": 0.002329,
+      "bin": 4,
+      "mean_pred": 0.004651,
+      "n": 36062
+     },
+     {
+      "bad_rate": 0.003189,
+      "bin": 5,
+      "mean_pred": 0.006924,
+      "n": 36062
+     },
+     {
+      "bad_rate": 0.004409,
+      "bin": 6,
+      "mean_pred": 0.010426,
+      "n": 36062
+     },
+     {
+      "bad_rate": 0.006406,
+      "bin": 7,
+      "mean_pred": 0.016418,
+      "n": 36062
+     },
+     {
+      "bad_rate": 0.009012,
+      "bin": 8,
+      "mean_pred": 0.029439,
+      "n": 36062
+     },
+     {
+      "bad_rate": 0.019965,
+      "bin": 9,
+      "mean_pred": 0.087911,
+      "n": 36063
+     }
+    ],
+    "ks": {
+     "est": 0.415357,
+     "hi": 0.437377,
+     "lo": 0.394805
+    },
+    "mean_pred": 0.016246
+   },
+   "test_incl_assisted": {
+    "auc": {
+     "est": 0.70174,
+     "hi": 0.707385,
+     "lo": 0.696732
+    },
+    "bad_rate": 0.020343,
+    "brier": 0.020073,
+    "calibration": [
+     {
+      "bad_rate": 0.002704,
+      "bin": 0,
+      "mean_pred": 0.000469,
+      "n": 36987
+     },
+     {
+      "bad_rate": 0.005164,
+      "bin": 1,
+      "mean_pred": 0.001176,
+      "n": 36986
+     },
+     {
+      "bad_rate": 0.008327,
+      "bin": 2,
+      "mean_pred": 0.002024,
+      "n": 36986
+     },
+     {
+      "bad_rate": 0.011653,
+      "bin": 3,
+      "mean_pred": 0.00317,
+      "n": 36986
+     },
+     {
+      "bad_rate": 0.015817,
+      "bin": 4,
+      "mean_pred": 0.004766,
+      "n": 36986
+     },
+     {
+      "bad_rate": 0.020305,
+      "bin": 5,
+      "mean_pred": 0.007094,
+      "n": 36986
+     },
+     {
+      "bad_rate": 0.024279,
+      "bin": 6,
+      "mean_pred": 0.010675,
+      "n": 36986
+     },
+     {
+      "bad_rate": 0.029308,
+      "bin": 7,
+      "mean_pred": 0.016798,
+      "n": 36986
+     },
+     {
+      "bad_rate": 0.034986,
+      "bin": 8,
+      "mean_pred": 0.03007,
+      "n": 36986
+     },
+     {
+      "bad_rate": 0.050883,
+      "bin": 9,
+      "mean_pred": 0.089324,
+      "n": 36987
+     }
+    ],
+    "ks": {
+     "est": 0.294577,
+     "hi": 0.305518,
+     "lo": 0.286111
+    },
+    "mean_pred": 0.016557
+   },
+   "train": {
+    "auc": {
+     "est": 0.852657,
+     "hi": 0.856546,
+     "lo": 0.848792
+    },
+    "bad_rate": 0.027973,
+    "brier": 0.025135,
+    "calibration": [
+     {
+      "bad_rate": 0.000401,
+      "bin": 0,
+      "mean_pred": 0.000484,
+      "n": 29893
+     },
+     {
+      "bad_rate": 0.001438,
+      "bin": 1,
+      "mean_pred": 0.001402,
+      "n": 29893
+     },
+     {
+      "bad_rate": 0.00281,
+      "bin": 2,
+      "mean_pred": 0.002708,
+      "n": 29892
+     },
+     {
+      "bad_rate": 0.003814,
+      "bin": 3,
+      "mean_pred": 0.004619,
+      "n": 29893
+     },
+     {
+      "bad_rate": 0.007193,
+      "bin": 4,
+      "mean_pred": 0.007531,
+      "n": 29892
+     },
+     {
+      "bad_rate": 0.011407,
+      "bin": 5,
+      "mean_pred": 0.01208,
+      "n": 29893
+     },
+     {
+      "bad_rate": 0.020072,
+      "bin": 6,
+      "mean_pred": 0.019455,
+      "n": 29892
+     },
+     {
+      "bad_rate": 0.032683,
+      "bin": 7,
+      "mean_pred": 0.032206,
+      "n": 29893
+     },
+     {
+      "bad_rate": 0.057106,
+      "bin": 8,
+      "mean_pred": 0.057035,
+      "n": 29892
+     },
+     {
+      "bad_rate": 0.142809,
+      "bin": 9,
+      "mean_pred": 0.14198,
+      "n": 29893
+     }
+    ],
+    "ks": {
+     "est": 0.550257,
+     "hi": 0.559255,
+     "lo": 0.539959
+    },
+    "mean_pred": 0.02795
+   },
+   "valid": {
+    "auc": {
+     "est": 0.7953,
+     "hi": 0.812462,
+     "lo": 0.777924
+    },
+    "bad_rate": 0.00531,
+    "brier": 0.005255,
+    "calibration": [
+     {
+      "bad_rate": 0.000301,
+      "bin": 0,
+      "mean_pred": 0.000294,
+      "n": 9963
+     },
+     {
+      "bad_rate": 0.000602,
+      "bin": 1,
+      "mean_pred": 0.000708,
+      "n": 9963
+     },
+     {
+      "bad_rate": 0.000903,
+      "bin": 2,
+      "mean_pred": 0.001157,
+      "n": 9962
+     },
+     {
+      "bad_rate": 0.002007,
+      "bin": 3,
+      "mean_pred": 0.001723,
+      "n": 9963
+     },
+     {
+      "bad_rate": 0.002309,
+      "bin": 4,
+      "mean_pred": 0.002454,
+      "n": 9963
+     },
+     {
+      "bad_rate": 0.003513,
+      "bin": 5,
+      "mean_pred": 0.003476,
+      "n": 9962
+     },
+     {
+      "bad_rate": 0.004617,
+      "bin": 6,
+      "mean_pred": 0.004977,
+      "n": 9963
+     },
+     {
+      "bad_rate": 0.005421,
+      "bin": 7,
+      "mean_pred": 0.00742,
+      "n": 9962
+     },
+     {
+      "bad_rate": 0.010539,
+      "bin": 8,
+      "mean_pred": 0.012102,
+      "n": 9963
+     },
+     {
+      "bad_rate": 0.022885,
+      "bin": 9,
+      "mean_pred": 0.032202,
+      "n": 9963
+     }
+    ],
+    "ks": {
+     "est": 0.444581,
+     "hi": 0.487242,
+     "lo": 0.412042
+    },
+    "mean_pred": 0.006651
+   }
+  }
+ }
+}
