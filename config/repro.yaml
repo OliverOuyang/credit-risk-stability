@@ -1,0 +1,10 @@
+# check_repro.py. seed: the one random seed every model/sample step reads.
+# dev_command: builds dev-subset metrics into dev_output; run twice, every number must agree within tolerance.
+#   It must work in GitHub Actions too (no raw data there), so the dev subset is synthetic or committed aggregates.
+#   null until 2c adds the model pipeline; then only uv.lock is checked.
+# reference: optional committed dev metrics; the fresh run must match it (clean-environment check in CI).
+seed: 20261127
+dev_command: null
+dev_output: outputs/dev_metrics.json
+reference: null
+tolerance: 1.0e-6

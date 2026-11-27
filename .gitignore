@@ -1,5 +1,5 @@
-data/raw/
-data/interim/
+data/raw
+data/interim
 *.zip
 .venv/
 __pycache__/

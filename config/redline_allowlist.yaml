@@ -1,0 +1,13 @@
+# check_redline.py: what may be committed besides code/config/docs.
+# allow_paths: data-like files (csv, parquet, ...) allowed by glob; everything else of that kind is rejected.
+# agg: every csv under agg.glob must be aggregate rows: no loan-id column or value,
+#      a count column, and every count >= min_count.
+allow_paths:
+  - docs/workflow_log.csv
+  - app/data/agg/*.csv
+agg:
+  glob: app/data/agg/*.csv
+  count_column: n
+  min_count: 30
+# Private keyword blacklist (company names, internal terms) lives outside the repo:
+# $CRS_REDLINE_BLACKLIST or ~/.config/crs/redline_blacklist.txt, one keyword per line, # comments.
