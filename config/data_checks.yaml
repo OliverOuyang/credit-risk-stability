@@ -1,0 +1,17 @@
+# checks/check_data.py. Value ranges: Freddie Mac SFLLD User Guide (Oct 2026), origination file,
+# widest disclosed range per field after "Not Available" codes become NaN (src/crs/frame.py MISSING).
+ranges:
+  classic_fico: [300, 850]
+  mi_pct: [0, 55]              # 0 = no MI
+  number_of_units: [1, 4]
+  original_cltv: [1, 998]      # 2018Q1 and prior non-HARP 6-200; later and HARP 1-998
+  original_dti: [0, 65]        # > 65 disclosed as Not Available; HARP always Not Available
+  original_ltv: [1, 998]       # 2018Q1 and prior non-HARP 6-105; later and HARP 1-998
+  number_of_borrowers: [1, 10]
+  original_upb: [1000, 10000000]  # guide: rounded to nearest $1,000; upper bound is a sanity cap, not from the guide
+upb_multiple: 1000
+# Max share missing per field over the whole frame. Project policy, not from the guide: set 2026-11-28 from the
+# Release 48 sample (dti 9.1% because HARP loans have no DTI, every other field <= 0.03%) with headroom.
+max_missing:
+  original_dti: 0.15
+  default: 0.01

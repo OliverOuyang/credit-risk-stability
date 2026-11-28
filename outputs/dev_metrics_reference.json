@@ -1296,5 +1296,14 @@
     "mean_pred": 0.064673
    }
   }
+ },
+ "training": {
+  "auc_gap_excess_lightgbm_over_scorecard": 0.080029,
+  "auc_gap_train_minus_valid": {
+   "lightgbm": 0.174053,
+   "scorecard": 0.094024
+  },
+  "lightgbm_best_iteration": 68,
+  "lightgbm_max_rounds": 2000
  }
 }

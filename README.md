@@ -34,7 +34,7 @@ make check
 
 ## 硬检查（`make check`）
 
-`make check` 跑测试和 `checks/` 下 5 个检查，任何一个不过就退出码 1 并列出违规位置；GitHub Actions 每次 push 和 PR 都跑。`make setup` 启用提交钩子，提交前对暂存文件跑红线检查。
+`make check` 跑测试和 `checks/` 下 7 个检查，任何一个不过就退出码 1 并列出违规位置；GitHub Actions 每次 push 和 PR 都跑。`make setup` 启用提交钩子，提交前对暂存文件跑红线检查。
 
 | 检查 | 拦什么 | 放行名单 |
 | --- | --- | --- |
@@ -43,6 +43,8 @@ make check
 | `check_repro` | 依赖没锁；开发子集跑两次指标不一致，或和提交的参考值不一致 | — |
 | `check_numbers` | 报告、作品集页、看板文案里的数字对不上 `metrics.json`、`config/` 或常量名单 | `config/constants_allowlist.yaml` |
 | `check_redline` | 原始和中间数据、行级数据文件、Notebook 输出、贷款号、原始行样例、密钥、关键词黑名单 | `config/redline_allowlist.yaml` |
+| `check_data` | 手造贷款测标签规则（提前还清、宽限、截尾、窗口边界）；建模表按年贷款数、坏样本数和 `docs/bad_counts_raw.md` 对不上；重复或格式不对的贷款号；字段超出官方取值范围、缺失率超限；原始文件行数和对账表不符 | 阈值在 `config/data_checks.yaml` |
+| `check_training` | LightGBM 早停没触发或停得过早；训练段和验证段 AUC 差距超限；LightGBM 的差距比评分卡大太多（过拟合） | 阈值在 `config/model.yaml` 的 `training_checks` |
 
 - 建模表约定：`data/interim/model_frame.parquet`，一行一笔贷款，列为特征加 `loan_id`、`segment`、`bad`、`first_payment_date` 等（见 `checks/common.py`）。有这个文件时，防泄漏和时间切分检查会连数据一起查。
 - 原始文件指纹：`make verify-raw` 重算 sha256 并和 `data/manifest.sha256` 比对。
