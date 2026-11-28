@@ -32,6 +32,7 @@ stability:
 
 report:
 	PYTHONPATH=src uv run python -m crs.report
+	PYTHONPATH=src uv run python reports/overview/stability_overview.py
 
 test:
 	uv run pytest -q

@@ -2,6 +2,11 @@
 
 # 跨期稳定性与再校准规则
 
+> **先读这里**：给非专业读者的一页图文总览是 `reports/stability_overview.html`（每节一张图加问答）。本文是给开发和审阅看的原文，数字和方法细节以本文为准。
+>
+> 三个指标：**AUC** 看排序能力（把坏客户排在前面，0.5 是瞎猜，1 是完美）；**O/E** 看概率准不准（实际违约 ÷ 预测违约，1 为准，小于 1 是模型高估）；**PSI** 看新客户变没变（分数分布和参照期比，小于 {{stability.psi_thresholds.0}} 稳定，超过 {{stability.psi_thresholds.1}} 要查）。
+> 三种用法：**固定**（2005–2010 训练一次一直用）、**去掉危机**（同样的老数据删掉 2007–2009）、**滚动**（每年用最近 5 年重训）。
+
 ## 结论
 
 1. **固定模型（2005–2010 训练一次不动）的区分度在下降，一部分来自训练集里的危机年份，一部分来自没用上近期数据（近似「老化」）。** 每年用最近数据重训（滚动重训）比固定模型显著更好的年份：评分卡 {{stability.rules.scorecard.years_rolling_better}}，LightGBM {{stability.rules.lightgbm.years_rolling_better}}。但只把 {{config.stability.crisis_sensitivity.drop_years}} 年从训练集去掉（其余照旧用老数据），就能拿回很大一部分：评分卡 {{stability.rules.scorecard.years_no_crisis_better}} 年、LightGBM {{stability.rules.lightgbm.years_no_crisis_better}} 年显著更好。滚动重训再比「去掉危机」显著更好的，只有评分卡 {{stability.rules.scorecard.years_rolling_better_than_no_crisis}} 年；LightGBM 没有一年，2024 年反而是「去掉危机」更好（{{stability.rules.lightgbm.years_no_crisis_better_than_rolling}}）。两者谁大因年而异：评分卡 2022 年危机样本的影响更大（去掉危机 − 固定 {{stability.annual.2022.scorecard.delta_no_crisis_minus_fixed.est:.4f}}，滚动 − 去掉危机 {{stability.annual.2022.scorecard.delta_rolling_minus_no_crisis.est:.4f}}），2021、2023 年近期数据重训的额外收益更大（2021 年 {{stability.annual.2021.scorecard.delta_no_crisis_minus_fixed.est:.4f}} 对 {{stability.annual.2021.scorecard.delta_rolling_minus_no_crisis.est:.4f}}）。「滚动 − 去掉危机」只是近似老化，两边训练年数、早停年不同，见设置。
@@ -27,7 +32,11 @@
 
 ![上：分数 PSI（对数刻度）：实线和训练段比，虚线和上年同季比，点线（测试期）是滚动模型和上线前 4 个季度的申请比，横线为阈值；下：季度 AUC，坏样本不足的季度留空；灰底为危机期和疫情宽限期](figures/stability_quarterly.png)
 
+怎么读：每个点是一个发放季度。上图看客户分数分布变了多少（越高变得越多，过行动线就该查）；下图看模型在那个季度的排序能力（越高越好）。
+
 ![各特征按季度的 CSI（相对训练段），颜色到行动阈值封顶，按峰值排序](figures/stability_csi.png)
+
+怎么读：每行一个变量，每列一个季度，颜色越深说明这个变量的分布和训练期差得越多。
 
 评分卡全部入模特征，按测试期平均 CSI 排序：
 
@@ -67,6 +76,8 @@ AUC 点估计；最后一列是滚动 − 去掉危机的配对差和 {{config.m
 | 2024Q1–Q2 | {{stability.annual.2024.sample.bads:,}} | {{stability.annual.2024.scorecard.fixed.auc.est:.3f}} | {{stability.annual.2024.scorecard.no_crisis.auc.est:.3f}} | {{stability.annual.2024.scorecard.rolling.auc.est:.3f}} | {{stability.annual.2024.scorecard.delta_rolling_minus_no_crisis.est:.4f}} [{{stability.annual.2024.scorecard.delta_rolling_minus_no_crisis.lo:.4f}}, {{stability.annual.2024.scorecard.delta_rolling_minus_no_crisis.hi:.4f}}] | {{stability.annual.2024.lightgbm.fixed.auc.est:.3f}} | {{stability.annual.2024.lightgbm.no_crisis.auc.est:.3f}} | {{stability.annual.2024.lightgbm.rolling.auc.est:.3f}} | {{stability.annual.2024.lightgbm.delta_rolling_minus_no_crisis.est:.4f}} [{{stability.annual.2024.lightgbm.delta_rolling_minus_no_crisis.lo:.4f}}, {{stability.annual.2024.lightgbm.delta_rolling_minus_no_crisis.hi:.4f}}] |
 
 ![逐年 AUC（上）和平均预测违约率 vs 实际坏账率（下）：固定、滚动重训、按 R2 规则执行后的模型](figures/stability_annual.png)
+
+怎么读：上排是每年新贷款上的 AUC（越高越好），下排是模型平均预测的违约率和实际违约率（黑线）的对比，越贴近黑线越准。
 
 ## 3 危机期和疫情宽限期
 

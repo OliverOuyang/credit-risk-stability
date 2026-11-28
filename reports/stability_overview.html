@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>跨期稳定性总览</title>
+<style>
+/* layout: 首页 = 架构图 + 详情面板；下面三部分是长文。颜色只按「放在哪个系统」和「严重程度」编码 */
+:root{
+  --paper:#f5f6f3; --card:#ffffff; --ink:#1b2320; --muted:#5a6560; --line:#d9dedb; --wash:#eceeea;
+  --accent:#1d5d74;
+  --mc:#5847b0; --mc-bg:#efedfb; --lf:#0e7464; --lf-bg:#e4f4ef; --loc:#5c625f; --loc-bg:#eef0ee;
+  --must:#b42318; --must-bg:#fdecea; --should:#a35f00; --should-bg:#fdf3e2; --may:#5c625f; --may-bg:#eef0ee;
+  --f-body:"Noto Sans SC","PingFang SC","Microsoft YaHei",system-ui,sans-serif;
+  --f-disp:"Noto Serif SC","Songti SC",serif;
+  --f-mono:"JetBrains Mono",ui-monospace,Menlo,monospace;
+  color-scheme:light;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --paper:#141917; --card:#1b211f; --ink:#e3e8e5; --muted:#9aa5a0; --line:#323b37; --wash:#222a27;
+  --accent:#6fb6cf; --mc:#a99cf0; --mc-bg:#272240; --lf:#5fcfb4; --lf-bg:#173029; --loc:#a8aeab; --loc-bg:#252b29;
+  --must:#f2836f; --must-bg:#3a1d19; --should:#e6b25c; --should-bg:#35281a; --may:#a8aeab; --may-bg:#252b29; color-scheme:dark;}}
+:root[data-theme="dark"]{
+  --paper:#141917; --card:#1b211f; --ink:#e3e8e5; --muted:#9aa5a0; --line:#323b37; --wash:#222a27;
+  --accent:#6fb6cf; --mc:#a99cf0; --mc-bg:#272240; --lf:#5fcfb4; --lf-bg:#173029; --loc:#a8aeab; --loc-bg:#252b29;
+  --must:#f2836f; --must-bg:#3a1d19; --should:#e6b25c; --should-bg:#35281a; --may:#a8aeab; --may-bg:#252b29; color-scheme:dark;}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--paper);color:var(--ink);font:15px/1.7 var(--f-body)}
+a{color:var(--accent)}
+code{font-family:var(--f-mono);font-size:.86em;background:var(--wash);padding:.05em .35em;border-radius:4px;word-break:break-all}
+pre{background:var(--wash);padding:12px 14px;border-radius:8px;overflow-x:auto;font-size:13px;line-height:1.55}
+pre code{background:none;padding:0;word-break:normal}
+h1,h2{font-family:var(--f-disp);font-weight:600;text-wrap:balance;letter-spacing:.01em}
+h1{font-size:30px;line-height:1.3;margin:0}
+h2{font-size:24px;margin:0 0 6px}
+h3{font-size:18px;margin:0 0 10px;text-wrap:balance}
+h4,h5,h6{font-size:15px;margin:18px 0 6px}
+.wrap{max-width:1180px;margin:0 auto;padding:0 20px}
+nav.top{position:sticky;top:0;z-index:5;background:var(--paper);border-bottom:1px solid var(--line)}
+nav.top .wrap{display:flex;gap:4px;align-items:center;flex-wrap:wrap;padding-top:8px;padding-bottom:8px}
+nav.top .brand{font-weight:700;margin-right:auto;font-size:14px}
+nav.top a{text-decoration:none;color:var(--ink);font-size:14px;padding:4px 10px;border-radius:6px}
+nav.top a:hover,nav.top a:focus-visible{background:var(--wash)}
+header.hero{padding:28px 0 8px}
+.meta{color:var(--muted);font-size:13px;margin-top:6px}
+.lead{font-size:16.5px;max-width:72ch;margin:14px 0 0}
+.verdict{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:20px 0}
+.verdict>div{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:14px 16px}
+.verdict .k{font-size:12.5px;color:var(--muted);font-weight:500}
+.verdict .v{font-size:15px;margin-top:4px}
+.verdict .v b{display:block;font-size:17px;margin-bottom:4px}
+.verdict .risk{border-color:var(--must);background:var(--must-bg)}
+.home{display:grid;grid-template-columns:minmax(0,1.9fr) minmax(280px,1fr);gap:16px;align-items:start;margin:8px 0 10px}
+.panel{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:16px 18px;position:sticky;top:58px;max-height:calc(100vh - 76px);overflow:auto}
+.panel h3{margin:0}
+.panel .kind{font-size:12px;color:var(--muted)}
+.panel dl{margin:10px 0 0;display:grid;grid-template-columns:auto 1fr;gap:6px 10px;font-size:14px}
+.panel dt{color:var(--muted);white-space:nowrap}
+.panel dd{margin:0}
+.panel .st{margin-top:10px;font-size:13.5px;background:var(--wash);border-radius:6px;padding:6px 10px}
+.panel .pf{margin-top:12px}
+.panel .pf a{display:block;text-decoration:none;color:var(--ink);font-size:13.5px;padding:6px 0;border-top:1px solid var(--line)}
+.panel .pf a:hover{color:var(--accent)}
+.hint{font-size:13px;color:var(--muted);margin:4px 0 0}
+.legend{display:flex;gap:16px;flex-wrap:wrap;font-size:13px;color:var(--muted);margin:6px 0 0}
+.legend i{display:inline-block;width:12px;height:12px;border-radius:3px;vertical-align:-1px;margin-right:5px;border:1px solid}
+.sv{overflow-x:auto;background:var(--card);border:1px solid var(--line);border-radius:10px;padding:10px}
+.dg{display:block;width:100%;min-width:760px;height:auto;color:var(--ink);font-family:var(--f-body)}
+.dg text{fill:currentColor;font-size:12.5px}
+.dg .c{text-anchor:middle}
+.dg .t{font-size:13.5px;font-weight:500}
+.dg .s{font-size:11.5px;fill:var(--muted)}
+.dg .ctl{font-size:12.5px;font-weight:700;fill:var(--muted)}
+.dg .ctl.e{text-anchor:end}
+.dg .ct{fill:none;stroke-width:1;stroke-dasharray:5 4}
+.dg .mc-c{stroke:var(--mc)} .dg .lf-c{stroke:var(--lf)} .dg .loc-c{stroke:var(--loc)}
+.dg .mc{fill:var(--mc-bg);stroke:var(--mc)} .dg .lf{fill:var(--lf-bg);stroke:var(--lf)} .dg .loc{fill:var(--loc-bg);stroke:var(--loc)}
+.dg .pp{fill:var(--card);stroke:var(--ink)}
+.dg .todo{stroke-dasharray:4 3}
+.dg .lnk line,.dg .lnk path{stroke:var(--muted);fill:none;stroke-width:1.2}
+.dg .dash{stroke-dasharray:4 3}
+.dg .al{font-size:11.5px;fill:var(--muted)}
+.dg.arch{min-width:600px}
+.arch .nd{cursor:pointer}
+.arch .t{font-size:14.5px}
+.arch .s{font-size:12.5px}
+.arch .al{font-size:12.5px}
+.arch .nd rect{stroke-width:1}
+.arch .nd:hover rect,.arch .nd:focus rect{stroke-width:2.2}
+.arch .nd:focus{outline:none}
+.arch .nd.on rect{stroke-width:2.6;stroke:var(--accent)}
+.arch .badge circle{stroke:var(--card);stroke-width:1.5}
+.arch .badge text{font-size:10.5px;font-weight:700;fill:#fff;text-anchor:middle}
+.dg .lane-h rect{fill:var(--wash);stroke:var(--line)} .dg .lane-h rect.hl{fill:var(--mc-bg);stroke:var(--mc)}
+.dg .lane-h text{text-anchor:middle;font-weight:500;font-size:12.5px}
+.dg .life line{stroke:var(--line);stroke-dasharray:3 4}
+.dg .msg line{stroke:currentColor;stroke-width:1.1}
+.dg .msg .l{font-size:11.5px}
+.dg .act{fill:var(--lf-bg);stroke:var(--lf)}
+.dg .colh text{font-size:12px;font-weight:700;fill:var(--muted);text-anchor:middle}
+.dg .st{stroke-width:1} .dg .st.lf{fill:var(--lf-bg);stroke:var(--lf)} .dg .st.mc{fill:var(--mc-bg);stroke:var(--mc)} .dg .st.loc{fill:var(--loc-bg);stroke:var(--loc)}
+.dg .proc{fill:var(--card);stroke:var(--ink);stroke-width:1}
+.dg .ar{stroke:var(--muted);stroke-width:1.1}
+figure.fg{margin:16px 0}
+figcaption{font-size:13.5px;color:var(--muted);margin-top:6px;max-width:80ch}
+section.part{padding:34px 0 10px;border-top:1px solid var(--line);margin-top:26px}
+section.part>.wrap>p.intro{max-width:72ch;color:var(--muted);margin:0 0 14px}
+.toc{display:flex;flex-wrap:wrap;gap:6px;margin:6px 0 18px}
+.toc a{font-size:13px;text-decoration:none;border:1px solid var(--line);border-radius:999px;padding:3px 10px;color:var(--ink);background:var(--card)}
+.sp{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:18px 20px;margin:14px 0}
+.sp h3 .orig{font-family:var(--f-mono);font-size:12px;color:var(--muted);font-weight:400;margin-left:10px}
+.sp p.why{margin:0 0 10px;font-size:14px;color:var(--accent)}
+.chunk{border-left:3px solid var(--wash);padding:2px 0 2px 14px;margin:14px 0}
+.chunk-h{font-weight:700;font-size:15px;margin-bottom:4px}
+.chunk-h .from{font-family:var(--f-mono);font-size:11.5px;font-weight:500;color:var(--accent);background:var(--wash);border-radius:4px;padding:1px 6px;margin-right:8px}
+.chunk p,.chunk li{max-width:80ch}
+.tw{overflow-x:auto;margin:8px 0}
+table{border-collapse:collapse;font-size:13.5px;min-width:520px}
+th,td{border:1px solid var(--line);padding:6px 9px;text-align:left;vertical-align:top}
+th{background:var(--wash);font-weight:500}
+td{font-variant-numeric:tabular-nums}
+blockquote{margin:6px 0;padding:4px 10px;border-left:3px solid var(--line);color:var(--muted);font-size:13.5px}
+.fd-list{margin:10px 0 4px;display:grid;gap:8px}
+.fd-cap{font-size:12.5px;font-weight:700;color:var(--muted)}
+.fd{border:1px solid var(--line);border-left:4px solid var(--may);border-radius:0 8px 8px 0;padding:10px 14px;background:var(--card)}
+.fd.must{border-left-color:var(--must)} .fd.should{border-left-color:var(--should)}
+.fd-h{display:flex;flex-wrap:wrap;gap:6px 10px;align-items:center;font-size:12.5px}
+.pill{border-radius:999px;padding:1px 9px;font-weight:700;font-size:12px}
+.pill.must{background:var(--must-bg);color:var(--must)} .pill.should{background:var(--should-bg);color:var(--should)} .pill.may{background:var(--may-bg);color:var(--may)}
+.fid{font-family:var(--f-mono);font-weight:500}
+.tag{background:var(--wash);border-radius:4px;padding:0 6px}
+.loc{color:var(--muted)}
+.ver{border:1px solid var(--line);border-radius:4px;padding:0 6px;color:var(--muted)}
+.ver.ok{border-color:var(--lf);color:var(--lf)}
+.fd p{margin:6px 0 0;font-size:14px}
+.fd b{font-weight:700;margin-right:8px;color:var(--muted);font-size:12.5px}
+.fd .more{font-size:12.5px}
+.filters{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin:8px 0 14px}
+.filters span{font-size:13px;color:var(--muted);margin-right:4px}
+.chip{font:inherit;font-size:13px;border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:999px;padding:3px 11px;cursor:pointer}
+.chip[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:var(--paper)}
+.chip:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.issues{display:grid;gap:10px}
+.steps{counter-reset:st;display:grid;gap:10px;padding:0;margin:0;list-style:none}
+.steps>li{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:12px 16px 12px 52px;position:relative}
+.steps>li::before{counter-increment:st;content:counter(st);position:absolute;left:14px;top:12px;width:26px;height:26px;border-radius:50%;background:var(--accent);color:var(--paper);font-weight:700;font-size:13px;display:grid;place-items:center}
+.steps h4{margin:0 0 4px;font-size:15.5px}
+.steps .row{display:grid;grid-template-columns:72px 1fr;gap:2px 10px;font-size:13.5px}
+.steps .row dt{color:var(--muted)} .steps .row dd{margin:0}
+.dec table{min-width:640px}
+footer{color:var(--muted);font-size:12.5px;padding:30px 0 40px}
+@media (max-width:980px){.home{grid-template-columns:1fr}.panel{position:static;max-height:none}.verdict{grid-template-columns:1fr}}
+@media (prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}}
+html{scroll-behavior:smooth}
+section[id],div[id],.sp{scroll-margin-top:60px}
+
+.two{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+.two h4{margin:4px 0 6px}
+.sp ul,.sp ol{padding-left:22px}
+.sp li{margin:4px 0}
+.scroll-hint{display:none;font-size:13px;color:var(--muted);margin:0 0 4px}
+@media (max-width:820px){.scroll-hint{display:block}}
+@media (max-width:700px){.two{grid-template-columns:1fr}}
+.dg .b{font-weight:700;font-size:13.5px}
+.dg .st.bad{fill:var(--must-bg);stroke:var(--must)}
+.dg .ar.bad{stroke:var(--must)}
+.dg text.warn-t{fill:var(--must)}
+.dg .pill{fill:var(--card);stroke:var(--accent)}
+.dg text.pill-t{fill:var(--accent);font-weight:500}
+.dg .nest-mc{fill:var(--card);stroke:var(--mc)}
+.dg .nest-loc{fill:var(--card);stroke:var(--loc)}
+.dg .wash{fill:var(--wash);stroke:var(--line)}
+.dg .card{fill:var(--card);stroke:var(--line)}
+.dg .empty{fill:none;stroke:var(--line);stroke-dasharray:3 4}
+.dg .grid{stroke:var(--line)}
+.dg .num{fill:var(--accent)}
+.dg text.num-t{fill:var(--paper);font-weight:700;font-size:12px}
+.dg .rail{stroke:var(--line);stroke-width:2}
+.verdict .v b{font-size:16px}
+.verdict .warn{border-color:var(--should);background:var(--should-bg)}
+table{min-width:0;width:100%}
+.tw table{min-width:560px}
+td,th{overflow-wrap:anywhere}
+.flowlist{counter-reset:fl;list-style:none;padding:0}
+.flowlist li{position:relative;padding-left:32px}
+.flowlist li::before{counter-increment:fl;content:counter(fl);position:absolute;left:0;top:2px;width:22px;height:22px;border-radius:50%;background:var(--accent);color:var(--paper);font-size:12px;font-weight:700;display:grid;place-items:center}
+.mock{border:1px solid var(--line);border-radius:10px;background:var(--paper);padding:14px 16px;margin:10px 0}
+.mock .say{font-weight:700;margin:0 0 10px}
+.mock .tiles{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin:0 0 10px}
+.mock .tile{background:var(--card);border:1px solid var(--line);border-radius:8px;padding:8px 10px;font-size:13px}
+.mock .tile b{display:block;font-size:14px}
+.mock .ok{color:var(--lf);font-weight:700}
+.mock .no{color:var(--must);font-weight:700}
+.mock .tag{display:inline-block;font-size:12px;color:var(--muted);border:1px dashed var(--line);border-radius:4px;padding:0 6px;margin-right:6px}
+@media (max-width:700px){.mock .tiles{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.wrap{padding-left:max(14px,env(safe-area-inset-left));padding-right:max(14px,env(safe-area-inset-right))}
+
+.hero2{padding:22px 20px 6px}.hero2 h1{font-size:28px}
+.lede{margin:8px 0 2px;max-width:80ch}.note{margin:2px 0 0;color:var(--muted);font-size:13.5px}
+.blk{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px 20px 12px;margin:12px auto;scroll-margin-top:50px}
+.blk h2,.blk h3{margin:0 0 4px}.blk h3{font-size:20px;font-family:var(--f-disp)}
+.part2{margin-top:22px;font-size:24px}
+.fx{margin:6px 0}.blk .two{display:block}.two .fx{margin:4px 0}.fx .sv{max-width:calc(var(--mw) + 22px);margin:0 auto;padding:6px}.fx .dg{min-width:0}.fx .scroll-hint{display:none}
+.qa{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:6px 22px;margin-top:8px;font-size:14px;line-height:1.5}
+.qa b{display:block;color:var(--accent);font-size:14.5px}
+.tag{margin:8px 0 0;font-size:13px;color:var(--muted);border-top:1px dashed var(--line);padding-top:6px}
+.case{margin:4px 0 8px;max-width:90ch}.board{background:#fff;color:#222;border:1px solid var(--line);border-radius:10px;padding:6px 10px}.board .mx{max-height:340px;overflow:auto;border:1px solid #eee;border-radius:6px}.board .mx table{font-size:13px!important}.board svg{max-width:760px!important}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:10px;margin:6px 0;font-size:14px;line-height:1.5}.cards>div{border:1px solid var(--line);border-left:4px solid var(--accent);border-radius:8px;padding:10px 12px}.cards b{display:block;color:var(--accent);margin-bottom:2px}
+.tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px;margin:8px 0}.tiles>div{border:1px solid var(--line);border-radius:8px;padding:8px 12px}.tiles span{display:block;color:var(--muted);font-size:13px}.tiles b{display:block;font-size:20px}.tiles em{display:block;font-style:normal;color:var(--muted);font-size:12.5px}
+.gaps{margin:6px 0;line-height:1.7;font-size:14.5px}#progress h3,#harness h3,#cycle h3,#gap h3{margin:8px 0 4px}
+.sc{display:grid;gap:10px}.sc-b{border:1px solid var(--line);border-radius:10px;padding:10px 14px;background:var(--card)}.sc-h{font-weight:700;margin-bottom:6px}.sc .ref{font-weight:400;font-size:12px;color:var(--accent);border:1px solid var(--accent);border-radius:10px;padding:0 8px;margin-left:8px}.chips{display:flex;flex-wrap:wrap;gap:6px}.chips span{background:var(--wash);border-radius:6px;padding:2px 8px;font-size:13.5px}.sc-c{margin:0 0 6px;font-weight:500}.sc-n{margin:4px 0;font-size:13px;color:var(--muted)}.sc details summary{cursor:pointer;font-weight:700}.sc .mx{max-height:420px;overflow:auto;margin-top:8px;background:#fff;color:#222}.sc .dg{min-width:0;max-width:760px;margin:0 auto;display:block}.sc{max-width:800px;margin:0 auto}
+.top3{margin:4px 0 10px;padding-left:20px;font-size:15px;line-height:1.7}.gapg{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:10px;margin:6px 0}.gapg>div{border:1px solid var(--line);border-left:4px solid var(--should);border-radius:8px;padding:8px 12px}.gapg b{margin-right:8px}.gapg .ref{font-size:12px;color:var(--accent);border:1px solid var(--accent);border-radius:10px;padding:0 8px}.gapg p{margin:4px 0 0;font-size:14px;line-height:1.55}
+.sc td.jerr{background:repeating-linear-gradient(45deg,#f7dad7 0 6px,#fff 6px 10px)!important}
+.prin{margin:14px auto 30px;font-size:14px}.prin summary{cursor:pointer;color:var(--accent)}.prin ol{columns:2;line-height:1.6}
+</style>
+</head>
+<body>
+<nav class="top" aria-label="页内导航"><div class="wrap"><span class="brand">credit-risk-stability</span><a href="#s0">指标</a><a href="#s1">排序</a><a href="#s2">疫情</a><a href="#s3">概率</a><a href="#s4">监控</a><a href="#s5">规则</a><a href="#s6">局限</a></div></nav>
+
+<header class="wrap hero2">
+<h1>贷前风控模型：放到新年份还靠谱吗？</h1>
+<p class="lede">结论：会变差。排序能力在 2019–2020 年跌到最低，违约概率越估越高（2023 年高估约 5 倍）。原因有两个：训练数据里含 2008 危机，以及没用上近期数据，哪个影响大每年不一样。建议每年重训、删掉危机年份，并按客户变化、概率、排序三条规则监控。</p>
+<p class="note">原文（数字和方法细节）：reports/stability.md；数字全部来自 outputs/stability.json。总览只做缩写和画图，冲突以原文为准。</p>
+</header>
+
+<section class="wrap blk" id="s0">
+<h2>先看懂三个指标</h2>
+<figure class="fg fx" style="--mw:760px"><div class="sv"><svg viewBox="0 0 760 150" role="img" aria-label="三个指标：AUC 看排序，O/E 看概率准不准，PSI 看新客户变没变" class="dg"><defs><marker id="kk" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M1 1L9 5L1 9z" fill="var(--muted)"/></marker></defs><rect x="10" y="14" width="236" height="120" rx="8" class="st lf"/><text x="128.0" y="61.5" class="c t">AUC：会不会排序</text><text x="128.0" y="78.5" class="c s">把坏客户排在好客户前面的能力</text><text x="128.0" y="95.5" class="c s">0.5 = 瞎猜，1 = 完美；0.75 以上算好</text><rect x="262" y="14" width="236" height="120" rx="8" class="st mc"/><text x="380.0" y="61.5" class="c t">O/E：概率准不准</text><text x="380.0" y="78.5" class="c s">实际违约人数 ÷ 模型预测的违约人数</text><text x="380.0" y="95.5" class="c s">1 = 准；小于 1 = 模型说得太悲观</text><rect x="514" y="14" width="236" height="120" rx="8" class="loc"/><text x="632.0" y="61.5" class="c t">PSI：客户变没变</text><text x="632.0" y="78.5" class="c s">新客户的分数分布和参照期比，差多少</text><text x="632.0" y="95.5" class="c s">&lt; 0.1 稳；0.1–0.25 观察；&gt; 0.25 要查</text></svg></div></figure>
+<div class="qa"><div><b>为什么要三个指标？</b>模型可能「排序还行但概率不准」，也可能「客户变了但模型还没坏」。三个指标各看一面，不能互相替代。</div><div><b>固定模型、去掉危机、每年重训是什么？</b>固定模型 = 用 2005–2010 年的贷款训练一次就一直用；去掉危机 = 同样的老数据但删掉 2007–2009 年；每年重训 = 每年年初用最近 5 年（已知结果的）贷款重新训练。</div><div><b>数据是什么？</b>Freddie Mac 公开的房贷数据，每年抽 5 万笔，从 2005 年看到 2024 年上半年；「坏客户」= 放款后 24 个月内逾期 90 天以上。下面的图都用评分卡模型，LightGBM 的结论在问答里说。</div></div>
+
+</section>
+<section class="wrap blk" id="s1">
+<h2>一　模型放到新年份还会排序吗？会，但变差了</h2>
+<figure class="fg fx" style="--mw:760px"><div class="sv"><svg viewBox="0 0 760 300" role="img" aria-label="每年新贷款上的 AUC：固定模型最低，2020 年跌到谷底；每年重训一直最高" class="dg"><defs><marker id="kk" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M1 1L9 5L1 9z" fill="var(--muted)"/></marker></defs><rect x="176.3" y="18" width="157.7" height="248" fill="var(--wash)"/><text x="255.1" y="32" class="c s">疫情宽限期贷款</text><line x1="58" x2="610" y1="266.0" y2="266.0" stroke="var(--line)"/><text x="50" y="270.0" class="s" style="text-anchor:end">0.60</text><line x1="58" x2="610" y1="216.4" y2="216.4" stroke="var(--line)"/><text x="50" y="220.4" class="s" style="text-anchor:end">0.65</text><line x1="58" x2="610" y1="166.8" y2="166.8" stroke="var(--line)"/><text x="50" y="170.8" class="s" style="text-anchor:end">0.70</text><line x1="58" x2="610" y1="117.2" y2="117.2" stroke="var(--line)"/><text x="50" y="121.2" class="s" style="text-anchor:end">0.75</text><line x1="58" x2="610" y1="67.6" y2="67.6" stroke="var(--line)"/><text x="50" y="71.6" class="s" style="text-anchor:end">0.80</text><line x1="58" x2="610" y1="18.0" y2="18.0" stroke="var(--line)"/><text x="50" y="22.0" class="s" style="text-anchor:end">0.85</text><text x="58.0" y="288" class="c s">2017</text><text x="136.9" y="288" class="c s">2018</text><text x="215.7" y="288" class="c s">2019</text><text x="294.6" y="288" class="c s">2020</text><text x="373.4" y="288" class="c s">2021</text><text x="452.3" y="288" class="c s">2022</text><text x="531.1" y="288" class="c s">2023</text><text x="610.0" y="288" class="c s">2024上半年</text><path d="M58.0 90.4 L136.9 122.7 L215.7 177.5 L294.6 215.2 L373.4 118.8 L452.3 141.7 L531.1 105.5 L610.0 71.0" fill="none" stroke="var(--must)" stroke-width="2.4"/><circle cx="58.0" cy="90.4" r="3.2" fill="var(--must)"/><circle cx="136.9" cy="122.7" r="3.2" fill="var(--must)"/><circle cx="215.7" cy="177.5" r="3.2" fill="var(--must)"/><circle cx="294.6" cy="215.2" r="3.2" fill="var(--must)"/><circle cx="373.4" cy="118.8" r="3.2" fill="var(--must)"/><circle cx="452.3" cy="141.7" r="3.2" fill="var(--must)"/><circle cx="531.1" cy="105.5" r="3.2" fill="var(--must)"/><circle cx="610.0" cy="71.0" r="3.2" fill="var(--must)"/><path d="M58.0 82.2 L136.9 106.4 L215.7 164.3 L294.6 215.5 L373.4 108.5 L452.3 107.1 L531.1 91.1 L610.0 55.5" fill="none" stroke="var(--should)" stroke-width="2.4" stroke-dasharray="7 4"/><circle cx="58.0" cy="82.2" r="3.2" fill="var(--should)"/><circle cx="136.9" cy="106.4" r="3.2" fill="var(--should)"/><circle cx="215.7" cy="164.3" r="3.2" fill="var(--should)"/><circle cx="294.6" cy="215.5" r="3.2" fill="var(--should)"/><circle cx="373.4" cy="108.5" r="3.2" fill="var(--should)"/><circle cx="452.3" cy="107.1" r="3.2" fill="var(--should)"/><circle cx="531.1" cy="91.1" r="3.2" fill="var(--should)"/><circle cx="610.0" cy="55.5" r="3.2" fill="var(--should)"/><path d="M58.0 75.0 L136.9 96.3 L215.7 156.7 L294.6 193.6 L373.4 75.9 L452.3 90.5 L531.1 75.3 L610.0 43.5" fill="none" stroke="var(--lf)" stroke-width="2.4"/><circle cx="58.0" cy="75.0" r="3.2" fill="var(--lf)"/><circle cx="136.9" cy="96.3" r="3.2" fill="var(--lf)"/><circle cx="215.7" cy="156.7" r="3.2" fill="var(--lf)"/><circle cx="294.6" cy="193.6" r="3.2" fill="var(--lf)"/><circle cx="373.4" cy="75.9" r="3.2" fill="var(--lf)"/><circle cx="452.3" cy="90.5" r="3.2" fill="var(--lf)"/><circle cx="531.1" cy="75.3" r="3.2" fill="var(--lf)"/><circle cx="610.0" cy="43.5" r="3.2" fill="var(--lf)"/><text x="618" y="47.5" style="fill:var(--lf);font-weight:600">每年重训</text><text x="618" y="62.5" style="fill:var(--should);font-weight:600">去掉危机年份</text><text x="618" y="77.5" style="fill:var(--must);font-weight:600">固定模型</text></svg></div></figure>
+<div class="qa"><div><b>这张图看什么？</b>横轴是贷款发放年份，纵轴是模型在当年新贷款上的 AUC，越高越会区分好坏客户。三条线是三种用法。</div><div><b>看到了什么？</b>固定模型从 2017 年的 0.78 一路掉到 2020 年的 0.65，之后回升到 0.80。每年重训的线几乎每年都在最上面（6/8 年明显更好）。</div><div><b>为什么变差？</b>两个原因叠加：① 训练数据里有 2008 危机，那几年的坏客户和后来的不一样，只删掉危机年份（黄色虚线）就补回一部分；② 没用上近期数据，近似「老化」，重训比只删危机还好的年份有 2021、2022、2023。两者哪个大，每年不一样。</div><div><b>所以呢？</b>建议每年重训，训练时删掉危机年份。LightGBM 趋势一样，但重训的好处小，只有 3 年明显更好。</div></div>
+
+</section>
+<section class="wrap blk" id="s2">
+<h2>二　2019–2020 年为什么掉得最多？一部分是口径问题</h2>
+<figure class="fg fx" style="--mw:760px"><div class="sv"><svg viewBox="0 0 760 270" role="img" aria-label="2018–2021 年两种口径的 AUC：不剔除宽限贷款时更高，但 2019–2020 年仍低于 2017 年" class="dg"><defs><marker id="kk" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M1 1L9 5L1 9z" fill="var(--muted)"/></marker></defs><line x1="58" x2="610" y1="236.0" y2="236.0" stroke="var(--line)"/><text x="50" y="240.0" class="s" style="text-anchor:end">0.60</text><line x1="58" x2="610" y1="192.4" y2="192.4" stroke="var(--line)"/><text x="50" y="196.4" class="s" style="text-anchor:end">0.65</text><line x1="58" x2="610" y1="148.8" y2="148.8" stroke="var(--line)"/><text x="50" y="152.8" class="s" style="text-anchor:end">0.70</text><line x1="58" x2="610" y1="105.2" y2="105.2" stroke="var(--line)"/><text x="50" y="109.2" class="s" style="text-anchor:end">0.75</text><line x1="58" x2="610" y1="61.6" y2="61.6" stroke="var(--line)"/><text x="50" y="65.6" class="s" style="text-anchor:end">0.80</text><line x1="58" x2="610" y1="18.0" y2="18.0" stroke="var(--line)"/><text x="50" y="22.0" class="s" style="text-anchor:end">0.85</text><rect x="64.9" y="81.7" width="25.6" height="154.3" fill="var(--must)" rx="2"/><rect x="92.5" y="61.3" width="25.6" height="174.7" fill="var(--muted)" rx="2"/><text x="92.5" y="258" class="c s">2017</text><rect x="133.9" y="110.1" width="25.6" height="125.9" fill="var(--must)" rx="2"/><rect x="161.5" y="114.6" width="25.6" height="121.4" fill="var(--muted)" rx="2"/><text x="161.5" y="258" class="c s">2018</text><rect x="202.9" y="158.2" width="25.6" height="77.8" fill="var(--must)" rx="2"/><rect x="230.5" y="138.7" width="25.6" height="97.3" fill="var(--muted)" rx="2"/><text x="230.5" y="258" class="c s">2019</text><rect x="271.9" y="191.4" width="25.6" height="44.6" fill="var(--must)" rx="2"/><rect x="299.5" y="122.5" width="25.6" height="113.5" fill="var(--muted)" rx="2"/><text x="299.5" y="258" class="c s">2020</text><rect x="340.9" y="106.6" width="25.6" height="129.4" fill="var(--must)" rx="2"/><rect x="368.5" y="82.1" width="25.6" height="153.9" fill="var(--muted)" rx="2"/><text x="368.5" y="258" class="c s">2021</text><rect x="409.9" y="126.8" width="25.6" height="109.2" fill="var(--must)" rx="2"/><rect x="437.5" y="124.3" width="25.6" height="111.7" fill="var(--muted)" rx="2"/><text x="437.5" y="258" class="c s">2022</text><rect x="478.9" y="94.9" width="25.6" height="141.1" fill="var(--must)" rx="2"/><rect x="506.5" y="91.4" width="25.6" height="144.6" fill="var(--muted)" rx="2"/><text x="506.5" y="258" class="c s">2023</text><rect x="547.9" y="64.6" width="25.6" height="171.4" fill="var(--must)" rx="2"/><rect x="575.5" y="67.4" width="25.6" height="168.6" fill="var(--muted)" rx="2"/><text x="575.5" y="258" class="c s">2024上半年</text><rect x="620" y="18" width="12" height="12" fill="var(--must)" rx="2"/><text x="638" y="29" style="fill:var(--must);font-weight:600">剔除宽限贷款</text><rect x="620" y="40" width="12" height="12" fill="var(--muted)" rx="2"/><text x="638" y="51" style="fill:var(--muted);font-weight:600">不剔除</text></svg></div></figure>
+<div class="qa"><div><b>宽限贷款是什么？</b>疫情期间借款人可以申请暂停还款。Freddie Mac 的数据里，暂停期间也会显示「逾期」，所以这些贷款算不算坏客户很难说。</div><div><b>两种口径差多少？</b>2019 年发放的贷款，剔除宽限贷款后坏账率 0.23%，不剔除是 4.61%，差了约 20 倍。剔除会偏低（拿掉了不少真有问题的人），不剔除会偏高（把暂停还款也当成违约）。</div><div><b>看到了什么？</b>不剔除时 2019、2020 年 AUC 是 0.71、0.73，比剔除口径高，但仍低于 2017 年的 0.80。</div><div><b>所以呢？</b>这两年的下跌一部分是口径造成的，一部分是模型真的变弱了，两者没法定量拆开。看这两年的结论要两种口径一起看。</div></div>
+
+</section>
+<section class="wrap blk" id="s3">
+<h2>三　模型给的违约概率准吗？明显偏高</h2>
+<figure class="fg fx" style="--mw:760px"><div class="sv"><svg viewBox="0 0 760 300" role="img" aria-label="预测违约率和实际违约率：固定模型越来越高估，2023 年高估约 5 倍；删掉危机年份能减半" class="dg"><defs><marker id="kk" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M1 1L9 5L1 9z" fill="var(--muted)"/></marker></defs><line x1="58" x2="610" y1="266.0" y2="266.0" stroke="var(--line)"/><text x="50" y="270.0" class="s" style="text-anchor:end">0%</text><line x1="58" x2="610" y1="216.4" y2="216.4" stroke="var(--line)"/><text x="50" y="220.4" class="s" style="text-anchor:end">1%</text><line x1="58" x2="610" y1="166.8" y2="166.8" stroke="var(--line)"/><text x="50" y="170.8" class="s" style="text-anchor:end">2%</text><line x1="58" x2="610" y1="117.2" y2="117.2" stroke="var(--line)"/><text x="50" y="121.2" class="s" style="text-anchor:end">3%</text><line x1="58" x2="610" y1="67.6" y2="67.6" stroke="var(--line)"/><text x="50" y="71.6" class="s" style="text-anchor:end">4%</text><line x1="58" x2="610" y1="18.0" y2="18.0" stroke="var(--line)"/><text x="50" y="22.0" class="s" style="text-anchor:end">5%</text><text x="58.0" y="288" class="c s">2017</text><text x="136.9" y="288" class="c s">2018</text><text x="215.7" y="288" class="c s">2019</text><text x="294.6" y="288" class="c s">2020</text><text x="373.4" y="288" class="c s">2021</text><text x="452.3" y="288" class="c s">2022</text><text x="531.1" y="288" class="c s">2023</text><text x="610.0" y="288" class="c s">2024上半年</text><path d="M58.0 242.4 L136.9 248.7 L215.7 254.5 L294.6 255.6 L373.4 251.3 L452.3 225.4 L531.1 222.4 L610.0 214.8" fill="none" stroke="var(--ink)" stroke-width="2.4"/><circle cx="58.0" cy="242.4" r="3.2" fill="var(--ink)"/><circle cx="136.9" cy="248.7" r="3.2" fill="var(--ink)"/><circle cx="215.7" cy="254.5" r="3.2" fill="var(--ink)"/><circle cx="294.6" cy="255.6" r="3.2" fill="var(--ink)"/><circle cx="373.4" cy="251.3" r="3.2" fill="var(--ink)"/><circle cx="452.3" cy="225.4" r="3.2" fill="var(--ink)"/><circle cx="531.1" cy="222.4" r="3.2" fill="var(--ink)"/><circle cx="610.0" cy="214.8" r="3.2" fill="var(--ink)"/><path d="M58.0 227.1 L136.9 207.8 L215.7 224.7 L294.6 241.6 L373.4 237.7 L452.3 160.9 L531.1 58.2 L610.0 48.2" fill="none" stroke="var(--must)" stroke-width="2.4"/><circle cx="58.0" cy="227.1" r="3.2" fill="var(--must)"/><circle cx="136.9" cy="207.8" r="3.2" fill="var(--must)"/><circle cx="215.7" cy="224.7" r="3.2" fill="var(--must)"/><circle cx="294.6" cy="241.6" r="3.2" fill="var(--must)"/><circle cx="373.4" cy="237.7" r="3.2" fill="var(--must)"/><circle cx="452.3" cy="160.9" r="3.2" fill="var(--must)"/><circle cx="531.1" cy="58.2" r="3.2" fill="var(--must)"/><circle cx="610.0" cy="48.2" r="3.2" fill="var(--must)"/><path d="M58.0 226.6 L136.9 214.7 L215.7 228.1 L294.6 243.3 L373.4 239.5 L452.3 199.3 L531.1 166.2 L610.0 164.3" fill="none" stroke="var(--should)" stroke-width="2.4" stroke-dasharray="7 4"/><circle cx="58.0" cy="226.6" r="3.2" fill="var(--should)"/><circle cx="136.9" cy="214.7" r="3.2" fill="var(--should)"/><circle cx="215.7" cy="228.1" r="3.2" fill="var(--should)"/><circle cx="294.6" cy="243.3" r="3.2" fill="var(--should)"/><circle cx="373.4" cy="239.5" r="3.2" fill="var(--should)"/><circle cx="452.3" cy="199.3" r="3.2" fill="var(--should)"/><circle cx="531.1" cy="166.2" r="3.2" fill="var(--should)"/><circle cx="610.0" cy="164.3" r="3.2" fill="var(--should)"/><path d="M58.0 236.7 L136.9 223.9 L215.7 244.9 L294.6 250.7 L373.4 237.7 L452.3 160.9 L531.1 58.2 L610.0 187.6" fill="none" stroke="var(--mc)" stroke-width="2.4" stroke-dasharray="7 4"/><circle cx="58.0" cy="236.7" r="3.2" fill="var(--mc)"/><circle cx="136.9" cy="223.9" r="3.2" fill="var(--mc)"/><circle cx="215.7" cy="244.9" r="3.2" fill="var(--mc)"/><circle cx="294.6" cy="250.7" r="3.2" fill="var(--mc)"/><circle cx="373.4" cy="237.7" r="3.2" fill="var(--mc)"/><circle cx="452.3" cy="160.9" r="3.2" fill="var(--mc)"/><circle cx="531.1" cy="58.2" r="3.2" fill="var(--mc)"/><circle cx="610.0" cy="187.6" r="3.2" fill="var(--mc)"/><text x="618" y="52.2" style="fill:var(--must);font-weight:600">固定模型预测</text><text x="618" y="168.3" style="fill:var(--should);font-weight:600">删掉危机后预测</text><text x="618" y="191.6" style="fill:var(--mc);font-weight:600">按规则校准后</text><text x="618" y="218.8" style="fill:var(--ink);font-weight:600">实际违约率</text></svg></div></figure>
+<div class="qa"><div><b>这张图看什么？</b>黑线是每年实际违约率，其他线是模型平均预测的违约率。线越贴近黑线越准。</div><div><b>偏高多少？</b>2023 年实际 0.88%，固定模型预测 4.19%，约 5 倍。删掉危机年份后降到 2.01%。</div><div><b>校准能修好吗？</b>按真实时间（年初只能用 3 年前的结果）每年校准一次，8 年里只有 2017 年校到可接受范围（O/E 在 0.8–1.25）。2021–2023 年参照年里疫情宽限贷款太多，规则主动不校、交人工，所以紫线和红线在这几年重合。</div><div><b>所以呢？</b>违约水平跟着利率、房价、政策逐年变，3 年前的数据追不上。光靠校准不够，要重训，再加人工对宏观形势的判断。</div></div>
+
+</section>
+<section class="wrap blk" id="s4">
+<h2>四　什么时候该报警？要和最近的客户比</h2>
+<figure class="fg fx" style="--mw:760px"><div class="sv"><svg viewBox="0 0 760 300" role="img" aria-label="每季度新客户的分数变化（PSI）：和 2005–2010 训练期比几乎一直超线；和上线前 4 个季度比只在 5 个季度超线" class="dg"><defs><marker id="kk" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M1 1L9 5L1 9z" fill="var(--muted)"/></marker></defs><rect x="276.9" y="18" width="152.3" height="248" fill="var(--wash)"/><text x="353.0" y="32" class="c s">疫情</text><line x1="58" x2="610" y1="266.0" y2="266.0" stroke="var(--line)"/><text x="50" y="270.0" class="s" style="text-anchor:end">0.0</text><line x1="58" x2="610" y1="204.0" y2="204.0" stroke="var(--line)"/><text x="50" y="208.0" class="s" style="text-anchor:end">0.4</text><line x1="58" x2="610" y1="142.0" y2="142.0" stroke="var(--line)"/><text x="50" y="146.0" class="s" style="text-anchor:end">0.8</text><line x1="58" x2="610" y1="80.0" y2="80.0" stroke="var(--line)"/><text x="50" y="84.0" class="s" style="text-anchor:end">1.2</text><line x1="58" x2="610" y1="18.0" y2="18.0" stroke="var(--line)"/><text x="50" y="22.0" class="s" style="text-anchor:end">1.6</text><line x1="58" x2="610" y1="250.5" y2="250.5" stroke="var(--muted)" stroke-dasharray="6 4"/><text x="616" y="254.5" class="s" style="fill:var(--muted)">0.1 观察线</text><line x1="58" x2="610" y1="227.2" y2="227.2" stroke="var(--must)" stroke-dasharray="6 4"/><text x="616" y="231.2" class="s" style="fill:var(--must)">0.25 行动线</text><text x="58.0" y="288" class="c s">2017Q1</text><text x="134.1" y="288" class="c s">2018Q1</text><text x="210.3" y="288" class="c s">2019Q1</text><text x="286.4" y="288" class="c s">2020Q1</text><text x="362.6" y="288" class="c s">2021Q1</text><text x="438.7" y="288" class="c s">2022Q1</text><text x="514.8" y="288" class="c s">2023Q1</text><text x="591.0" y="288" class="c s">2024Q1</text><path d="M58.0 174.7 L77.0 182.0 L96.1 165.4 L115.1 170.8 L134.1 197.5 L153.2 221.7 L172.2 230.0 L191.2 244.4 L210.3 224.9 L229.3 195.7 L248.3 156.5 L267.4 143.1 L286.4 127.2 L305.4 58.4 L324.5 35.6 L343.5 50.2 L362.6 47.5 L381.6 89.6 L400.6 96.3 L419.7 97.4 L438.7 137.3 L457.7 242.3 L476.8 240.5 L495.8 195.2 L514.8 198.6 L533.9 200.9 L552.9 183.1 L571.9 166.2 L591.0 182.4 L610.0 179.3" fill="none" stroke="var(--must)" stroke-width="2.4"/><path d="M58.0 246.7 L77.0 240.0 L96.1 249.6 L115.1 249.5 L134.1 264.4 L153.2 251.9 L172.2 243.1 L191.2 225.9 L210.3 265.8 L229.3 256.9 L248.3 216.2 L267.4 201.0 L286.4 242.7 L305.4 189.9 L324.5 159.5 L343.5 157.0 L362.6 263.4 L381.6 263.6 L400.6 260.9 L419.7 258.0 L438.7 251.1 L457.7 182.1 L476.8 151.7 L495.8 137.4 L514.8 262.3 L533.9 265.5 L552.9 265.1 L571.9 264.6 L591.0 265.1 L610.0 264.2" fill="none" stroke="var(--lf)" stroke-width="2.4"/><text x="618" y="183.3" style="fill:var(--must);font-weight:600">和训练期比</text><text x="618" y="268.2" style="fill:var(--lf);font-weight:600">和上线前 4 季比</text></svg></div></figure>
+<div class="qa"><div><b>这张图看什么？</b>每个点是一个季度的新客户，纵轴是 PSI：新客户分数分布和参照期差多少。超过 0.25 那条线就该查原因。</div><div><b>为什么红线一直超线？</b>和 2005–2010 年训练期比，26/30 个季度都超行动线，等于一直亮灯。主要因为利率：2012–2021 年利率低，和训练期差太远。</div><div><b>绿线说明什么？</b>改成和「上线前最近 4 个季度」比，只有 2019Q4、2020Q3、2020Q4、2022Q3、2022Q4 连续两季超线，正好是疫情前后的再融资潮和 2022 年加息，都是真实的客户变化。</div><div><b>绿线为什么每年初掉回 0 附近？</b>每年年初模型重训一次，参照也换成最近 4 个季度，所以新一年的第一季度和参照很像，之后逐季拉开。</div><div><b>报警了做什么？</b>先查是哪个变量变了（利率、贷款用途、DTI），判断是市场变了还是客户变了，不直接重训。</div></div>
+
+</section>
+<section class="wrap blk" id="s5">
+<h2>五　建议的监控规则</h2>
+<figure class="fg fx" style="--mw:760px"><div class="sv"><svg viewBox="0 0 760 250" role="img" aria-label="三条规则：每季度看客户变化，每年看概率准不准和排序能力，触发后分别查原因、校准或重训" class="dg"><defs><marker id="kk" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M1 1L9 5L1 9z" fill="var(--muted)"/></marker></defs><rect x="10" y="20" width="220" height="60" rx="8" class="st lf"/><text x="120.0" y="46.0" class="c t">每季度：新客户打分</text><text x="120.0" y="63.0" class="c s">不需要等结果</text><rect x="270" y="20" width="220" height="60" rx="8" class="card"/><text x="380.0" y="46.0" class="c t">R1 客户变了吗</text><text x="380.0" y="63.0" class="c s">PSI vs 上线前 4 季</text><rect x="530" y="20" width="220" height="60" rx="8" class="pp"/><text x="640.0" y="46.0" class="c t">查原因</text><text x="640.0" y="63.0" class="c s">利率？客群？编码改了？</text><rect x="10" y="140" width="220" height="60" rx="8" class="st mc"/><text x="120.0" y="166.0" class="c t">每年年初：3 年前的结果</text><text x="120.0" y="183.0" class="c s">那批贷款 24 个月已到期</text><rect x="270" y="110" width="220" height="54" rx="8" class="card"/><text x="380.0" y="133.0" class="c t">R2 概率准吗</text><text x="380.0" y="150.0" class="c s">O/E 出了 0.8–1.25</text><rect x="270" y="180" width="220" height="54" rx="8" class="card"/><text x="380.0" y="203.0" class="c t">R3 排序变差了吗</text><text x="380.0" y="220.0" class="c s">AUC 低于验证期</text><rect x="530" y="110" width="220" height="54" rx="8" class="pp"/><text x="640.0" y="133.0" class="c t">校准概率</text><text x="640.0" y="150.0" class="c s">疫情宽限多的年份改交人工</text><rect x="530" y="180" width="220" height="54" rx="8" class="st bad"/><text x="640.0" y="203.0" class="c t">重训 + 人工判断</text><text x="640.0" y="220.0" class="c s">校准两次仍不准也到这</text><path d="M230 50L268 50" class="ar " fill="none" marker-end="url(#kk)"/><path d="M490 50L528 50" class="ar " fill="none" marker-end="url(#kk)"/><path d="M230 160L268 140" class="ar " fill="none" marker-end="url(#kk)"/><path d="M230 175L268 205" class="ar " fill="none" marker-end="url(#kk)"/><path d="M490 137L528 137" class="ar " fill="none" marker-end="url(#kk)"/><path d="M490 207L528 207" class="ar " fill="none" marker-end="url(#kk)"/><path d="M640 164L640 178" class="ar dash" fill="none" marker-end="url(#kk)"/></svg></div></figure>
+<div class="qa"><div><b>为什么分「每季度」和「每年」？</b>违约要 24 个月后才知道，年初最多只能看到 3 年前那批贷款的结果。只有 R1 不需要等，当季就能报。</div><div><b>回测里触发了多少次？</b>R1 评分卡 5 个季度；R2 每年都触发；R3 有 6/8 年触发。说明「训练一次一直用」行不通。</div><div><b>阈值从哪来？</b>PSI 的 0.1 / 0.25 是行业惯例；O/E 容忍带 0.8–1.25、连续 2 季、宽限占比 2% 是本项目定的，其中 2% 是看了回测才定的，没独立验证。</div></div>
+
+</section>
+<section class="wrap blk" id="s6">
+<h2>六　还没解决的</h2>
+
+<div class="qa"><div><b>样本小</b>每年抽 5 万笔，2019–2021 年剔除宽限后坏客户只有一两百个，逐年结论误差大。2020、2021 年全量数据已下载，还没用来复核。</div><div><b>没有独立复跑</b>代码被另一家模型（Gemini）和顾问审过，但都只读了代码，没人拿原始数据重跑一遍核对结果。</div><div><b>渠道变量</b>2009 年起渠道的编码改了，评分卡把编码变化当成了风险信号，模型里还没合并。</div></div>
+
+</section>
+
+<footer class="wrap">MULT-416 · 数据：Freddie Mac Single-Family Loan-Level Dataset（抽样版）</footer>
+</body>
+</html>
