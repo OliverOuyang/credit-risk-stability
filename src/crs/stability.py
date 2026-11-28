@@ -14,7 +14,7 @@ from crs.model import R, Woe, auc_ks, features, fit_lightgbm, fit_scorecard, int
 from crs.target import ROOT, load_cfg
 
 MODELS = ("scorecard", "lightgbm")
-EPS = 1e-6  # floor for empty bins in PSI
+EPS = 1e-4  # floor for empty bins in PSI/CSI; an empty bin then adds about share * ln(share / 1e-4)
 
 
 def psi(expected, actual):
@@ -123,9 +123,37 @@ def quarterly(wide, preds, sc_bins, kept, woe, base, cfg):
     return pd.DataFrame(rows), pd.DataFrame(csi_rows)
 
 
+def band_ok(oe, cfg):
+    lo, hi = cfg["rules"]["oe_band"]
+    return lo <= oe <= hi
+
+
+def mature(df, Y, months):
+    """Loans whose label window has closed by December of Y-1 (deployment at the start of Y)."""
+    fpd = df["first_payment_date"].astype(str)
+    m = fpd.str[:4].astype(int) * 12 + fpd.str[4:6].astype(int) - 1
+    return df[m + months - 1 <= (Y - 1) * 12 + 11]
+
+
+def r2_action(cal, band, assisted_share, max_share):
+    """R2 on the latest mature year: ok / recalibrate / escalate (forbearance-heavy base year, no Platt)."""
+    if not (cal["miscalibrated"] and not band[0] <= cal["oe"] <= band[1]):
+        return "ok"
+    return "escalate" if assisted_share > max_share else "recalibrate"
+
+
+def ref_psi(model, d, ref):
+    """Quarterly PSI of `model` on year-Y loans against its own reference window (ref decile bins)."""
+    f, labels = score_bins(model(ref))
+    base = shares(f(model(ref)), labels)
+    return {quarter_label(qi): round(psi(base, shares(f(model(g)), labels)), R) for qi, g in d.groupby("qi")}
+
+
 def annual(wide, model_frame, fixed, mcfg, cfg, seed, valid_auc):
-    """Per backtest year: fixed, recalibrated fixed, rolling retrain, no-crisis fixed, fixed incl. assisted."""
+    """Per backtest year Y, deployed at the start of Y with only labels mature by then: fixed, rolling retrain,
+    no-crisis fixed, recalibrated fixed, the R2 policy actually applied, fixed incl. assisted loans."""
     level = mcfg["evaluation"]["ci_level"]
+    months = load_cfg("target")["performance_months"]
     rng = np.random.default_rng(seed)
     main = wide[wide.assisted == 0]
     vy = main["vintage_year"]
@@ -133,27 +161,41 @@ def annual(wide, model_frame, fixed, mcfg, cfg, seed, valid_auc):
     drop = cfg["crisis_sensitivity"]["drop_years"]
     nc, _ = fit_both(mf[(mf.segment == "train") & ~mf.vintage_year.isin(drop)], mf[mf.segment == "valid"], mcfg, seed)
     lo, hi = cfg["rolling"]["train_years_back"]
+    rc, band = cfg["recalibration"], cfg["rules"]["oe_band"]
     out = {}
     for Y in cfg["backtest_years"]:
         print(f"[stability] backtest {Y}", flush=True)
-        d, da = main[vy == Y], wide[(wide.vintage_year == Y) & (wide.segment != "gap")]
-        roll, _ = fit_both(main[vy.between(Y - lo, Y - hi)], main[vy == Y - cfg["rolling"]["valid_year_back"]],
-                           mcfg, seed)
-        fit_d = main[vy == Y - cfg["recalibration"]["fit_year_back"]]
+        d, da = main[vy == Y], wide[wide.vintage_year == Y]
+        ref = mature(main[vy == Y - rc["fit_year_back"]], Y, months)  # latest mature year: R2/R3 and Platt
+        ref_all = mature(wide[wide.vintage_year == Y - rc["fit_year_back"]], Y, months)
+        share = float(ref_all["assisted"].mean())
+        roll, _ = fit_both(mature(main[vy.between(Y - lo, Y - hi)], Y, months),
+                           mature(main[vy == Y - cfg["rolling"]["valid_year_back"]], Y, months), mcfg, seed)
         res = {"sample": {"loans": len(d), "bads": int(d.bad.sum()), "bad_rate": round(float(d.bad.mean()), R),
-                          "loans_incl_assisted": len(da), "bad_rate_incl_assisted": round(float(da.bad.mean()), R)}}
+                          "loans_incl_assisted": len(da), "bad_rate_incl_assisted": round(float(da.bad.mean()), R)},
+               "reference": {"vintage": Y - rc["fit_year_back"], "loans": len(ref), "bads": int(ref.bad.sum()),
+                             "assisted_share": round(share, R)}}
         for m in MODELS:
             v = {"fixed": fixed[m](d), "rolling": roll[m](d), "no_crisis": nc[m](d)}
-            v["recal"] = platt(fixed[m](fit_d), fit_d["bad"])(v["fixed"])
-            a = boot_auc(d["bad"], v, [("rolling", "fixed"), ("no_crisis", "fixed")], cfg["bootstrap_reps"], rng, level)
+            v["recal"] = platt(fixed[m](ref), ref["bad"])(v["fixed"])
+            ref_cal = calib(ref["bad"], fixed[m](ref), level)
+            ref_auc = auc_ks(ref["bad"].to_numpy(), fixed[m](ref))[0]
+            action = r2_action(ref_cal, band, share, rc["max_assisted_share"])
+            v["policy"] = v["recal"] if action == "recalibrate" else v["fixed"]
+            a = boot_auc(d["bad"], v, [("rolling", "fixed"), ("no_crisis", "fixed"), ("rolling", "no_crisis")],
+                         cfg["bootstrap_reps"], rng, level)
             res[m] = {k: {"auc": a[k], **calib(d["bad"], p, level)} for k, p in v.items()}
-            res[m]["delta_rolling_minus_fixed"] = a["rolling-fixed"]
-            res[m]["delta_no_crisis_minus_fixed"] = a["no_crisis-fixed"]
+            for x, y in (("rolling", "fixed"), ("no_crisis", "fixed"), ("rolling", "no_crisis")):
+                res[m][f"delta_{x}_minus_{y}"] = a[f"{x}-{y}"]
             pa = fixed[m](da)
             res[m]["incl_assisted"] = {"auc": round(auc_ks(da["bad"].to_numpy(), pa)[0], R),
                                        **calib(da["bad"], pa, level)}
-            f = res[m]["fixed"]
-            res[m]["rule"] = {"recalibrate": f["miscalibrated"], "retrain": bool(f["auc"]["hi"] < valid_auc[m]["lo"])}
+            pol = res[m]["policy"]
+            res[m]["rule"] = {"ref_oe": ref_cal["oe"], "ref_z": ref_cal["z"], "ref_auc": round(ref_auc, R),
+                              "r2": action, "retrain": bool(ref_auc < valid_auc[m]["lo"]),
+                              "policy_in_band": bool(band[0] <= pol["oe"] <= band[1])}
+            res[m]["psi_ref"] = {"rolling": ref_psi(roll[m], d, mature(main[vy == Y - cfg["rolling"]["valid_year_back"]], Y, months)),
+                                 "fixed": ref_psi(fixed[m], d, ref)}
         out[str(Y)] = res
     return out
 
@@ -189,13 +231,15 @@ def figures(q, csi, ann, psi_cuts, periods, path):
         axes[0].plot(x, q[f"psi_{m}"], "o-", ms=3, color=color[m], label=f"{m} vs train")
         axes[0].plot(x, q[f"psi_yoy_{m}"].astype(float), "x--", ms=3, color=color[m], alpha=0.6,
                      label=f"{m} vs same quarter last year")
+        axes[0].plot(x, q[f"psi_ref_rolling_{m}"].astype(float), "d:", ms=3, color=color[m],
+                     label=f"{m} rolling model vs its own reference year")
         axes[1].plot(x, q[f"auc_{m}"].astype(float), "o-", ms=3, color=color[m], label=m)
     for c in psi_cuts:
         axes[0].axhline(c, ls=":", color="grey")
     axes[0].set_ylabel("score PSI")
     axes[0].set_yscale("log")
     axes[1].set_ylabel("AUC (quarter)")
-    axes[0].legend()
+    axes[0].legend(fontsize=7, ncol=2)
     for ax in axes:
         shade(ax)
     fig.tight_layout()
@@ -216,8 +260,8 @@ def figures(q, csi, ann, psi_cuts, periods, path):
     years = list(ann)
     fig, axes = plt.subplots(2, 2, figsize=(10, 6.4), sharex=True)
     for j, m in enumerate(MODELS):
-        for k, st in (("fixed", "o-"), ("rolling", "s--"), ("recal", "^:")):
-            if k != "recal":
+        for k, st in (("fixed", "o-"), ("rolling", "s--"), ("policy", "^:")):
+            if k != "policy":
                 axes[0, j].plot(years, [ann[y][m][k]["auc"]["est"] for y in years], st, color=color[m], label=k, ms=4)
             axes[1, j].plot(years, [ann[y][m][k]["mean_pred"] for y in years], st, color=color[m], label=k, ms=4)
         axes[1, j].plot(years, [ann[y]["sample"]["bad_rate"] for y in years], "k-", lw=2, label="observed")
@@ -262,29 +306,41 @@ def main():
     ann = annual(wide, mf, fixed, mcfg, cfg, seed, valid_auc)
 
     test_q = q[q.segment == "test"]
+    k = cfg["rules"]["consecutive_quarters"]
+    for m in MODELS:  # R1 against the online model's own reference window (test quarters only)
+        for kind in ("rolling", "fixed"):
+            ref = {qq: v for y in ann for qq, v in ann[y][m]["psi_ref"][kind].items()}
+            q[f"psi_ref_{kind}_{m}"] = q.quarter.map(ref)
+
+    def fired(values, level):
+        bs = [band(v, psi_cuts) if v == v else 0 for v in values]  # NaN outside the test period -> 0
+        return [test_q.quarter.iat[i] for i in range(k - 1, len(bs)) if all(x >= level for x in bs[i - k + 1:i + 1])]
+
     rules = {}
     for m in MODELS:
-        bands = [band(v, psi_cuts) for v in q[f"psi_{m}"]]
-        yoy = [band(v, psi_cuts) if v == v and v is not None else 0 for v in q[f"psi_yoy_{m}"]]
-        ty = yoy[-len(test_q):]
-        k = cfg["rules"]["consecutive_quarters"]
-        rules[m] = {"yoy_test_quarters_watch": int(sum(b >= 1 for b in ty)),
-                    "yoy_test_quarters_act": int(sum(b >= 2 for b in ty)),
-                    "yoy_fired_act": [q.quarter.iat[i] for i in range(len(q)) if i >= k - 1
-                                      and all(b >= 2 for b in yoy[i - k + 1:i + 1])],
-                    "yoy_fired_watch": [q.quarter.iat[i] for i in range(len(q)) if i >= k - 1
-                                        and all(b >= 1 for b in yoy[i - k + 1:i + 1])],
+        t = test_q.index
+        r2 = {y: ann[y][m]["rule"]["r2"] for y in ann}
+        rules[m] = {"test_quarters_act": int((q.loc[t, f"psi_{m}"] >= psi_cuts[1]).sum()),
+                    "test_quarters_watch": int((q.loc[t, f"psi_{m}"] >= psi_cuts[0]).sum()),
+                    "psi_max": round(float(q.loc[t, f"psi_{m}"].max()), R),
+                    "psi_max_quarter": q.quarter[q.loc[t, f"psi_{m}"].idxmax()],
+                    "yoy_fired_act": fired(q.loc[t, f"psi_yoy_{m}"].tolist(), 2),
+                    "yoy_fired_watch": fired(q.loc[t, f"psi_yoy_{m}"].tolist(), 1),
+                    "ref_rolling_fired_act": fired(q.loc[t, f"psi_ref_rolling_{m}"].tolist(), 2),
+                    "ref_rolling_fired_watch": fired(q.loc[t, f"psi_ref_rolling_{m}"].tolist(), 1),
+                    "ref_fixed_fired_act": fired(q.loc[t, f"psi_ref_fixed_{m}"].tolist(), 2),
+                    "ref_fixed_fired_watch": fired(q.loc[t, f"psi_ref_fixed_{m}"].tolist(), 1),
                     "years_rolling_better": [y for y in ann if ann[y][m]["delta_rolling_minus_fixed"]["lo"] > 0],
                     "years_no_crisis_better": [y for y in ann if ann[y][m]["delta_no_crisis_minus_fixed"]["lo"] > 0],
+                    "years_rolling_better_than_no_crisis": [y for y in ann if ann[y][m]["delta_rolling_minus_no_crisis"]["lo"] > 0],
+                    "years_no_crisis_better_than_rolling": [y for y in ann if ann[y][m]["delta_rolling_minus_no_crisis"]["hi"] < 0],
                     "years_recal_still_off": [y for y in ann if ann[y][m]["recal"]["miscalibrated"]],
                     "years_recal_brier_better": [y for y in ann if ann[y][m]["recal"]["brier"] < ann[y][m]["fixed"]["brier"]],
-"first_watch": first_sustained(bands, q.quarter, 1, cfg["rules"]["consecutive_quarters"]),
-                    "first_act": first_sustained(bands, q.quarter, 2, cfg["rules"]["consecutive_quarters"]),
-                    "test_quarters_watch": int(sum(b >= 1 for b in bands[-len(test_q):])),
-                    "test_quarters_act": int(sum(b >= 2 for b in bands[-len(test_q):])),
-                    "psi_max": round(float(q[f"psi_{m}"].max()), R),
-                    "psi_max_quarter": q.quarter[q[f"psi_{m}"].idxmax()],
-                    "years_recalibrate": [y for y in ann if ann[y][m]["rule"]["recalibrate"]],
+                    "years_r2_recalibrate": [y for y in ann if r2[y] == "recalibrate"],
+                    "years_r2_escalate": [y for y in ann if r2[y] == "escalate"],
+                    "years_r2_ok": [y for y in ann if r2[y] == "ok"],
+                    "years_policy_in_band": [y for y in ann if ann[y][m]["rule"]["policy_in_band"]],
+                    "years_fixed_in_band": [y for y in ann if band_ok(ann[y][m]["fixed"]["oe"], cfg)],
                     "years_retrain": [y for y in ann if ann[y][m]["rule"]["retrain"]]}
     csi_peak = csi.loc[csi.groupby("feature")["csi"].idxmax()].sort_values("csi", ascending=False)
     out = {"quarters": {"n": len(q), "first": q.quarter.iat[0], "last": q.quarter.iat[-1],
@@ -303,7 +359,7 @@ def main():
     pd.DataFrame([{"vintage_year": int(y), "model": m, "variant": k, "n": ann[y]["sample"]["loans"],
                    "bads": ann[y]["sample"]["bads"], "auc": v["auc"]["est"], "auc_lo": v["auc"]["lo"],
                    "auc_hi": v["auc"]["hi"], **{c: v[c] for c in ("mean_pred", "bad_rate", "brier", "oe", "z")}}
-                  for y in ann for m in MODELS for k in ("fixed", "recal", "rolling", "no_crisis")
+                  for y in ann for m in MODELS for k in ("fixed", "recal", "policy", "rolling", "no_crisis")
                   for v in [ann[y][m][k]]]).to_csv(agg / "annual.csv", index=False)
     figures(q, csi, ann, psi_cuts, cfg["periods"], ROOT / "reports" / "figures")
 
