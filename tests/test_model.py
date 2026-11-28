@@ -38,6 +38,7 @@ def test_woe_bins_missing_rare_and_unseen():
 
 def test_render_placeholders():
     m = {"a": {"auc": 0.77123, "cal": [{"n": 1234}]}}
-    assert render("{{metrics.a.auc:.3f}} {{metrics.a.cal.0.n:,}} {{config.split.gap_months}}", m) == "0.771 1,234 24"
+    assert render("{{metrics.a.auc:.3f}} {{metrics.a.cal.0.n:,}} {{config.split.gap_months}}", {"metrics": m}) == "0.771 1,234 24"
+    assert render("{{stability.y}} {{stability.e}}", {"stability": {"y": ["2018", "2019"], "e": []}}) == "2018、2019 无"
     with pytest.raises(KeyError):
-        render("{{metrics.a.missing}}", m)
+        render("{{metrics.a.missing}}", {"metrics": m})

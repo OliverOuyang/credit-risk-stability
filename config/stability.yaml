@@ -1,0 +1,24 @@
+# src/crs/stability.py. Thresholds that are industry constants live in config/constants_allowlist.yaml
+# (looked up by id); everything here is a project policy choice.
+span: {start: "2005Q1", end: "2024Q2"}   # every vintage with a full 24-month window (target.yaml cutoff)
+periods:                                  # reported separately; "normal" otherwise
+  crisis: {start: "2007Q1", end: "2009Q4"}  # 2008 financial crisis vintages (inside train)
+  covid:  {start: "2020Q1", end: "2021Q4"}  # COVID forbearance vintages
+min_bads_for_auc: 30          # quarterly AUC left blank below this many bads
+backtest_years: [2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024]
+# Backtest year Y: the model is deployed at the start of Y, so only labels mature by December of Y-1 are
+# usable (first_payment_date + performance_months - 1 <= Y-1 December); applied to every Y-k sample below.
+rolling:                       # annual retrain for backtest year Y
+  train_years_back: [8, 4]     # train on vintages Y-8 .. Y-4
+  valid_year_back: 3           # early stopping on Y-3 (mature part); no gap between train and this year
+recalibration:
+  method: platt                # logistic on logit(p), fitted on the mature part of vintage Y-3
+  fit_year_back: 3
+  max_assisted_share: 0.02     # guard: if Y-3 had more forbearance-flagged loans than this, no Platt; escalate.
+                               # chosen after looking at the backtest (ref years 2.3% vs 1.1%), not validated independently
+crisis_sensitivity:
+  drop_years: [2007, 2008, 2009]  # fixed models refitted on train vintages without these
+rules:
+  consecutive_quarters: 2      # PSI must stay in a band this many quarters before the rule fires
+  oe_band: [0.8, 1.25]         # business tolerance: R2 fires only if O/E is significant AND outside this band
+bootstrap_reps: 500            # annual backtest intervals (paired where two models share a resample)

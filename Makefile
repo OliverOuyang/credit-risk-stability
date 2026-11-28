@@ -1,4 +1,4 @@
-.PHONY: setup manifest verify-raw bad-counts frame model report test check all
+.PHONY: setup manifest verify-raw bad-counts frame stability-frame model stability report test check all
 
 setup:
 	uv sync
@@ -19,8 +19,16 @@ bad-counts:
 frame:
 	PYTHONPATH=src uv run python -m crs.frame
 
+# Every labelled vintage incl. gap years -> data/interim/stability_frame.parquet (not committed).
+stability-frame:
+	PYTHONPATH=src uv run python -m crs.frame --all
+
 model:
 	PYTHONPATH=src uv run python -m crs.model
+
+# Needs both frames and outputs/metrics.json -> outputs/stability.json, app/data/agg/*.csv, figures.
+stability:
+	PYTHONPATH=src uv run python -m crs.stability
 
 report:
 	PYTHONPATH=src uv run python -m crs.report
@@ -34,4 +42,4 @@ CHECKS := leakage split repro numbers redline
 check: test
 	@fail=0; for c in $(CHECKS); do uv run python -m checks.check_$$c || fail=1; done; exit $$fail
 
-all: manifest bad-counts frame model report check
+all: manifest bad-counts frame stability-frame model stability report check

@@ -30,11 +30,11 @@ def segment_of(loan_id, segs):
     return seg
 
 
-def build(raw_dir):
+def build(raw_dir, segs=None):
     feats = load_cfg("features")["origination"]
     cols = {i: f["name"] for i, f in enumerate(feats)}  # origination file order = features.yaml order
     use = [f["name"] for f in feats if f.get("use")]
-    segs = load_cfg("split")["segments"]
+    segs = segs or load_cfg("split")["segments"]
     years = sorted({y for s in segs.values() for y in range(int(s["start"][:4]), int(s["end"][:4]) + 1)})
     target = load_cfg("target")
     parts = []
@@ -60,8 +60,14 @@ def build(raw_dir):
 
 
 if __name__ == "__main__":
-    out = ROOT / "data" / "interim" / "model_frame.parquet"
+    import sys
+    # --all: every labelled vintage incl. the gap years (stability analysis); segment = split segment or "gap".
+    wide = "--all" in sys.argv
+    out = ROOT / "data" / "interim" / ("stability_frame.parquet" if wide else "model_frame.parquet")
     out.parent.mkdir(parents=True, exist_ok=True)
-    f = build(ROOT / "data" / "raw")
+    s = load_cfg("stability")["span"] if wide else None
+    f = build(ROOT / "data" / "raw", {"all": s} if wide else None)
+    if wide:
+        f["segment"] = segment_of(f["loan_id"], load_cfg("split")["segments"]).fillna("gap")
     f.to_parquet(out, index=False)
     print(f.groupby("segment").agg(loans=("bad", "size"), bads=("bad", "sum"), assisted=("assisted", "sum")))

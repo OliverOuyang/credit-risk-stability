@@ -1,0 +1,2322 @@
+{
+ "annual": {
+  "2017": {
+   "lightgbm": {
+    "delta_no_crisis_minus_fixed": {
+     "est": 0.00055,
+     "hi": 0.011449,
+     "lo": -0.012266
+    },
+    "delta_rolling_minus_fixed": {
+     "est": -0.00248,
+     "hi": 0.010861,
+     "lo": -0.016254
+    },
+    "delta_rolling_minus_no_crisis": {
+     "est": -0.00303,
+     "hi": 0.01359,
+     "lo": -0.01803
+    },
+    "fixed": {
+     "auc": {
+      "est": 0.778211,
+      "hi": 0.80394,
+      "lo": 0.753624
+     },
+     "bad_rate": 0.00475,
+     "brier": 0.004803,
+     "mean_pred": 0.01408,
+     "miscalibrated": true,
+     "oe": 0.337365,
+     "z": -17.664842
+    },
+    "incl_assisted": {
+     "auc": 0.802201,
+     "bad_rate": 0.010279,
+     "brier": 0.010034,
+     "mean_pred": 0.014184,
+     "miscalibrated": true,
+     "oe": 0.724674,
+     "z": -7.400111
+    },
+    "no_crisis": {
+     "auc": {
+      "est": 0.778761,
+      "hi": 0.807199,
+      "lo": 0.752256
+     },
+     "bad_rate": 0.00475,
+     "brier": 0.004804,
+     "mean_pred": 0.015092,
+     "miscalibrated": true,
+     "oe": 0.31475,
+     "z": -18.896866
+    },
+    "policy": {
+     "auc": {
+      "est": 0.778211,
+      "hi": 0.80394,
+      "lo": 0.753624
+     },
+     "bad_rate": 0.00475,
+     "brier": 0.004711,
+     "mean_pred": 0.005098,
+     "miscalibrated": false,
+     "oe": 0.931766,
+     "z": -1.0913
+    },
+    "psi_ref": {
+     "fixed": {
+      "2017Q1": 0.018178,
+      "2017Q2": 0.030243,
+      "2017Q3": 0.017279,
+      "2017Q4": 0.02108
+     },
+     "rolling": {
+      "2017Q1": 0.048361,
+      "2017Q2": 0.064062,
+      "2017Q3": 0.02983,
+      "2017Q4": 0.035474
+     }
+    },
+    "recal": {
+     "auc": {
+      "est": 0.778211,
+      "hi": 0.80394,
+      "lo": 0.753624
+     },
+     "bad_rate": 0.00475,
+     "brier": 0.004711,
+     "mean_pred": 0.005098,
+     "miscalibrated": false,
+     "oe": 0.931766,
+     "z": -1.0913
+    },
+    "rolling": {
+     "auc": {
+      "est": 0.775731,
+      "hi": 0.803049,
+      "lo": 0.750999
+     },
+     "bad_rate": 0.00475,
+     "brier": 0.004706,
+     "mean_pred": 0.005816,
+     "miscalibrated": true,
+     "oe": 0.816724,
+     "z": -3.121808
+    },
+    "rule": {
+     "policy_in_band": true,
+     "r2": "recalibrate",
+     "ref_auc": 0.808701,
+     "ref_oe": 0.388995,
+     "ref_z": -15.732634,
+     "retrain": false
+    }
+   },
+   "reference": {
+    "assisted_share": 0.002874,
+    "bads": 252,
+    "loans": 45453,
+    "vintage": 2014
+   },
+   "sample": {
+    "bad_rate": 0.00475,
+    "bad_rate_incl_assisted": 0.010279,
+    "bads": 235,
+    "loans": 49471,
+    "loans_incl_assisted": 49910
+   },
+   "scorecard": {
+    "delta_no_crisis_minus_fixed": {
+     "est": 0.008358,
+     "hi": 0.019294,
+     "lo": -0.002113
+    },
+    "delta_rolling_minus_fixed": {
+     "est": 0.015537,
+     "hi": 0.029903,
+     "lo": -0.001019
+    },
+    "delta_rolling_minus_no_crisis": {
+     "est": 0.007179,
+     "hi": 0.020723,
+     "lo": -0.007313
+    },
+    "fixed": {
+     "auc": {
+      "est": 0.776966,
+      "hi": 0.80419,
+      "lo": 0.749889
+     },
+     "bad_rate": 0.00475,
+     "brier": 0.004767,
+     "mean_pred": 0.007849,
+     "miscalibrated": true,
+     "oe": 0.605231,
+     "z": -7.881939
+    },
+    "incl_assisted": {
+     "auc": 0.800381,
+     "bad_rate": 0.010279,
+     "brier": 0.010009,
+     "mean_pred": 0.00799,
+     "miscalibrated": true,
+     "oe": 1.286439,
+     "z": 5.797873
+    },
+    "no_crisis": {
+     "auc": {
+      "est": 0.785324,
+      "hi": 0.81208,
+      "lo": 0.75748
+     },
+     "bad_rate": 0.00475,
+     "brier": 0.004737,
+     "mean_pred": 0.007949,
+     "miscalibrated": true,
+     "oe": 0.597575,
+     "z": -8.073935
+    },
+    "policy": {
+     "auc": {
+      "est": 0.776966,
+      "hi": 0.80419,
+      "lo": 0.749889
+     },
+     "bad_rate": 0.00475,
+     "brier": 0.004709,
+     "mean_pred": 0.005898,
+     "miscalibrated": true,
+     "oe": 0.805418,
+     "z": -3.347952
+    },
+    "psi_ref": {
+     "fixed": {
+      "2017Q1": 0.025321,
+      "2017Q2": 0.046306,
+      "2017Q3": 0.029004,
+      "2017Q4": 0.029735
+     },
+     "rolling": {
+      "2017Q1": 0.124207,
+      "2017Q2": 0.167714,
+      "2017Q3": 0.10601,
+      "2017Q4": 0.10656
+     }
+    },
+    "recal": {
+     "auc": {
+      "est": 0.776966,
+      "hi": 0.80419,
+      "lo": 0.749889
+     },
+     "bad_rate": 0.00475,
+     "brier": 0.004709,
+     "mean_pred": 0.005898,
+     "miscalibrated": true,
+     "oe": 0.805418,
+     "z": -3.347952
+    },
+    "rolling": {
+     "auc": {
+      "est": 0.792503,
+      "hi": 0.820429,
+      "lo": 0.765387
+     },
+     "bad_rate": 0.00475,
+     "brier": 0.004707,
+     "mean_pred": 0.005844,
+     "miscalibrated": true,
+     "oe": 0.812813,
+     "z": -3.21203
+    },
+    "rule": {
+     "policy_in_band": true,
+     "r2": "recalibrate",
+     "ref_auc": 0.776236,
+     "ref_oe": 0.753185,
+     "ref_z": -4.57668,
+     "retrain": true
+    }
+   }
+  },
+  "2018": {
+   "lightgbm": {
+    "delta_no_crisis_minus_fixed": {
+     "est": -0.000458,
+     "hi": 0.012319,
+     "lo": -0.014218
+    },
+    "delta_rolling_minus_fixed": {
+     "est": 0.014449,
+     "hi": 0.037472,
+     "lo": -0.008007
+    },
+    "delta_rolling_minus_no_crisis": {
+     "est": 0.014907,
+     "hi": 0.038141,
+     "lo": -0.006561
+    },
+    "fixed": {
+     "auc": {
+      "est": 0.759571,
+      "hi": 0.793703,
+      "lo": 0.724421
+     },
+     "bad_rate": 0.003482,
+     "brier": 0.003672,
+     "mean_pred": 0.015147,
+     "miscalibrated": true,
+     "oe": 0.229907,
+     "z": -20.958844
+    },
+    "incl_assisted": {
+     "auc": 0.739058,
+     "bad_rate": 0.026493,
+     "brier": 0.025414,
+     "mean_pred": 0.015613,
+     "miscalibrated": true,
+     "oe": 1.696806,
+     "z": 19.714386
+    },
+    "no_crisis": {
+     "auc": {
+      "est": 0.759112,
+      "hi": 0.792281,
+      "lo": 0.72362
+     },
+     "bad_rate": 0.003482,
+     "brier": 0.003612,
+     "mean_pred": 0.015487,
+     "miscalibrated": true,
+     "oe": 0.224852,
+     "z": -21.267807
+    },
+    "policy": {
+     "auc": {
+      "est": 0.759571,
+      "hi": 0.793703,
+      "lo": 0.724421
+     },
+     "bad_rate": 0.003482,
+     "brier": 0.003587,
+     "mean_pred": 0.005609,
+     "miscalibrated": true,
+     "oe": 0.62089,
+     "z": -6.324747
+    },
+    "psi_ref": {
+     "fixed": {
+      "2018Q1": 0.000103,
+      "2018Q2": 0.002546,
+      "2018Q3": 0.010145,
+      "2018Q4": 0.030694
+     },
+     "rolling": {
+      "2018Q1": 0.011521,
+      "2018Q2": 0.103597,
+      "2018Q3": 0.17944,
+      "2018Q4": 0.287599
+     }
+    },
+    "recal": {
+     "auc": {
+      "est": 0.759571,
+      "hi": 0.793703,
+      "lo": 0.724421
+     },
+     "bad_rate": 0.003482,
+     "brier": 0.003587,
+     "mean_pred": 0.005609,
+     "miscalibrated": true,
+     "oe": 0.62089,
+     "z": -6.324747
+    },
+    "rolling": {
+     "auc": {
+      "est": 0.77402,
+      "hi": 0.806401,
+      "lo": 0.739778
+     },
+     "bad_rate": 0.003482,
+     "brier": 0.003468,
+     "mean_pred": 0.006205,
+     "miscalibrated": true,
+     "oe": 0.561246,
+     "z": -7.59405
+    },
+    "rule": {
+     "policy_in_band": false,
+     "r2": "recalibrate",
+     "ref_auc": 0.812481,
+     "ref_oe": 0.30121,
+     "ref_z": -17.200175,
+     "retrain": false
+    }
+   },
+   "reference": {
+    "assisted_share": 0.004297,
+    "bads": 179,
+    "loans": 45414,
+    "vintage": 2015
+   },
+   "sample": {
+    "bad_rate": 0.003482,
+    "bad_rate_incl_assisted": 0.026493,
+    "bads": 166,
+    "loans": 47669,
+    "loans_incl_assisted": 49900
+   },
+   "scorecard": {
+    "delta_no_crisis_minus_fixed": {
+     "est": 0.016473,
+     "hi": 0.028896,
+     "lo": 0.004217
+    },
+    "delta_rolling_minus_fixed": {
+     "est": 0.026678,
+     "hi": 0.042534,
+     "lo": 0.009216
+    },
+    "delta_rolling_minus_no_crisis": {
+     "est": 0.010206,
+     "hi": 0.022572,
+     "lo": -0.003679
+    },
+    "fixed": {
+     "auc": {
+      "est": 0.744406,
+      "hi": 0.781907,
+      "lo": 0.707587
+     },
+     "bad_rate": 0.003482,
+     "brier": 0.003749,
+     "mean_pred": 0.011731,
+     "miscalibrated": true,
+     "oe": 0.296852,
+     "z": -16.979155
+    },
+    "incl_assisted": {
+     "auc": 0.739259,
+     "bad_rate": 0.026493,
+     "brier": 0.025396,
+     "mean_pred": 0.012425,
+     "miscalibrated": true,
+     "oe": 2.13225,
+     "z": 28.826346
+    },
+    "no_crisis": {
+     "auc": {
+      "est": 0.760878,
+      "hi": 0.798206,
+      "lo": 0.722078
+     },
+     "bad_rate": 0.003482,
+     "brier": 0.003611,
+     "mean_pred": 0.010334,
+     "miscalibrated": true,
+     "oe": 0.33697,
+     "z": -14.939328
+    },
+    "policy": {
+     "auc": {
+      "est": 0.744406,
+      "hi": 0.781907,
+      "lo": 0.707587
+     },
+     "bad_rate": 0.003482,
+     "brier": 0.003601,
+     "mean_pred": 0.008485,
+     "miscalibrated": true,
+     "oe": 0.410404,
+     "z": -12.057797
+    },
+    "psi_ref": {
+     "fixed": {
+      "2018Q1": 0.008126,
+      "2018Q2": 0.059074,
+      "2018Q3": 0.103705,
+      "2018Q4": 0.212641
+     },
+     "rolling": {
+      "2018Q1": 0.010405,
+      "2018Q2": 0.090931,
+      "2018Q3": 0.147884,
+      "2018Q4": 0.25844
+     }
+    },
+    "recal": {
+     "auc": {
+      "est": 0.744406,
+      "hi": 0.781907,
+      "lo": 0.707587
+     },
+     "bad_rate": 0.003482,
+     "brier": 0.003601,
+     "mean_pred": 0.008485,
+     "miscalibrated": true,
+     "oe": 0.410404,
+     "z": -12.057797
+    },
+    "rolling": {
+     "auc": {
+      "est": 0.771084,
+      "hi": 0.807406,
+      "lo": 0.734731
+     },
+     "bad_rate": 0.003482,
+     "brier": 0.003478,
+     "mean_pred": 0.006601,
+     "miscalibrated": true,
+     "oe": 0.527549,
+     "z": -8.455194
+    },
+    "rule": {
+     "policy_in_band": false,
+     "r2": "recalibrate",
+     "ref_auc": 0.789603,
+     "ref_oe": 0.679167,
+     "ref_z": -5.256857,
+     "retrain": false
+    }
+   }
+  },
+  "2019": {
+   "lightgbm": {
+    "delta_no_crisis_minus_fixed": {
+     "est": 0.006249,
+     "hi": 0.024018,
+     "lo": -0.011491
+    },
+    "delta_rolling_minus_fixed": {
+     "est": 0.039356,
+     "hi": 0.075471,
+     "lo": 0.00132
+    },
+    "delta_rolling_minus_no_crisis": {
+     "est": 0.033107,
+     "hi": 0.065953,
+     "lo": -0.003617
+    },
+    "fixed": {
+     "auc": {
+      "est": 0.679469,
+      "hi": 0.72912,
+      "lo": 0.6285
+     },
+     "bad_rate": 0.002319,
+     "brier": 0.002509,
+     "mean_pred": 0.013786,
+     "miscalibrated": true,
+     "oe": 0.168188,
+     "z": -21.305858
+    },
+    "incl_assisted": {
+     "auc": 0.706241,
+     "bad_rate": 0.046142,
+     "brier": 0.044492,
+     "mean_pred": 0.014236,
+     "miscalibrated": true,
+     "oe": 3.241318,
+     "z": 60.407036
+    },
+    "no_crisis": {
+     "auc": {
+      "est": 0.685718,
+      "hi": 0.736905,
+      "lo": 0.63934
+     },
+     "bad_rate": 0.002319,
+     "brier": 0.002483,
+     "mean_pred": 0.014626,
+     "miscalibrated": true,
+     "oe": 0.158529,
+     "z": -22.159691
+    },
+    "policy": {
+     "auc": {
+      "est": 0.679469,
+      "hi": 0.72912,
+      "lo": 0.6285
+     },
+     "bad_rate": 0.002319,
+     "brier": 0.002396,
+     "mean_pred": 0.003851,
+     "miscalibrated": true,
+     "oe": 0.602133,
+     "z": -5.418928
+    },
+    "psi_ref": {
+     "fixed": {
+      "2019Q1": 0.002377,
+      "2019Q2": 0.00474,
+      "2019Q3": 0.030134,
+      "2019Q4": 0.048079
+     },
+     "rolling": {
+      "2019Q1": 0.000456,
+      "2019Q2": 0.06004,
+      "2019Q3": 0.215357,
+      "2019Q4": 0.242119
+     }
+    },
+    "recal": {
+     "auc": {
+      "est": 0.679469,
+      "hi": 0.72912,
+      "lo": 0.6285
+     },
+     "bad_rate": 0.002319,
+     "brier": 0.002396,
+     "mean_pred": 0.003851,
+     "miscalibrated": true,
+     "oe": 0.602133,
+     "z": -5.418928
+    },
+    "rolling": {
+     "auc": {
+      "est": 0.718825,
+      "hi": 0.763804,
+      "lo": 0.673074
+     },
+     "bad_rate": 0.002319,
+     "brier": 0.002314,
+     "mean_pred": 0.004674,
+     "miscalibrated": true,
+     "oe": 0.496077,
+     "z": -7.46576
+    },
+    "rule": {
+     "policy_in_band": false,
+     "r2": "recalibrate",
+     "ref_auc": 0.82209,
+     "ref_oe": 0.248293,
+     "ref_z": -18.524744,
+     "retrain": false
+    }
+   },
+   "reference": {
+    "assisted_share": 0.007612,
+    "bads": 148,
+    "loans": 45368,
+    "vintage": 2016
+   },
+   "sample": {
+    "bad_rate": 0.002319,
+    "bad_rate_incl_assisted": 0.046142,
+    "bads": 108,
+    "loans": 46578,
+    "loans_incl_assisted": 49889
+   },
+   "scorecard": {
+    "delta_no_crisis_minus_fixed": {
+     "est": 0.013307,
+     "hi": 0.027517,
+     "lo": 0.000644
+    },
+    "delta_rolling_minus_fixed": {
+     "est": 0.02106,
+     "hi": 0.041678,
+     "lo": 0.000659
+    },
+    "delta_rolling_minus_no_crisis": {
+     "est": 0.007752,
+     "hi": 0.028735,
+     "lo": -0.010573
+    },
+    "fixed": {
+     "auc": {
+      "est": 0.689167,
+      "hi": 0.740779,
+      "lo": 0.63803
+     },
+     "bad_rate": 0.002319,
+     "brier": 0.002497,
+     "mean_pred": 0.008334,
+     "miscalibrated": true,
+     "oe": 0.278218,
+     "z": -14.451902
+    },
+    "incl_assisted": {
+     "auc": 0.711618,
+     "bad_rate": 0.046142,
+     "brier": 0.044776,
+     "mean_pred": 0.008905,
+     "miscalibrated": true,
+     "oe": 5.181641,
+     "z": 89.666407
+    },
+    "no_crisis": {
+     "auc": {
+      "est": 0.702475,
+      "hi": 0.756605,
+      "lo": 0.650896
+     },
+     "bad_rate": 0.002319,
+     "brier": 0.002409,
+     "mean_pred": 0.00764,
+     "miscalibrated": true,
+     "oe": 0.303475,
+     "z": -13.295794
+    },
+    "policy": {
+     "auc": {
+      "est": 0.689167,
+      "hi": 0.740779,
+      "lo": 0.63803
+     },
+     "bad_rate": 0.002319,
+     "brier": 0.002333,
+     "mean_pred": 0.004264,
+     "miscalibrated": true,
+     "oe": 0.543736,
+     "z": -6.472638
+    },
+    "psi_ref": {
+     "fixed": {
+      "2019Q1": 0.002289,
+      "2019Q2": 0.041493,
+      "2019Q3": 0.134679,
+      "2019Q4": 0.163058
+     },
+     "rolling": {
+      "2019Q1": 0.001471,
+      "2019Q2": 0.058693,
+      "2019Q3": 0.321319,
+      "2019Q4": 0.419623
+     }
+    },
+    "recal": {
+     "auc": {
+      "est": 0.689167,
+      "hi": 0.740779,
+      "lo": 0.63803
+     },
+     "bad_rate": 0.002319,
+     "brier": 0.002333,
+     "mean_pred": 0.004264,
+     "miscalibrated": true,
+     "oe": 0.543736,
+     "z": -6.472638
+    },
+    "rolling": {
+     "auc": {
+      "est": 0.710227,
+      "hi": 0.76352,
+      "lo": 0.659625
+     },
+     "bad_rate": 0.002319,
+     "brier": 0.002318,
+     "mean_pred": 0.004097,
+     "miscalibrated": true,
+     "oe": 0.565977,
+     "z": -6.030602
+    },
+    "rule": {
+     "policy_in_band": false,
+     "r2": "recalibrate",
+     "ref_auc": 0.7884,
+     "ref_oe": 0.535182,
+     "ref_z": -7.803159,
+     "retrain": false
+    }
+   }
+  },
+  "2020": {
+   "lightgbm": {
+    "delta_no_crisis_minus_fixed": {
+     "est": 0.000887,
+     "hi": 0.023468,
+     "lo": -0.025683
+    },
+    "delta_rolling_minus_fixed": {
+     "est": 0.021735,
+     "hi": 0.051443,
+     "lo": -0.010358
+    },
+    "delta_rolling_minus_no_crisis": {
+     "est": 0.020848,
+     "hi": 0.049573,
+     "lo": -0.011388
+    },
+    "fixed": {
+     "auc": {
+      "est": 0.640069,
+      "hi": 0.692889,
+      "lo": 0.576563
+     },
+     "bad_rate": 0.00209,
+     "brier": 0.002204,
+     "mean_pred": 0.011496,
+     "miscalibrated": true,
+     "oe": 0.181801,
+     "z": -19.531363
+    },
+    "incl_assisted": {
+     "auc": 0.721062,
+     "bad_rate": 0.016322,
+     "brier": 0.015937,
+     "mean_pred": 0.011619,
+     "miscalibrated": true,
+     "oe": 1.404848,
+     "z": 9.82236
+    },
+    "no_crisis": {
+     "auc": {
+      "est": 0.640956,
+      "hi": 0.693802,
+      "lo": 0.583415
+     },
+     "bad_rate": 0.00209,
+     "brier": 0.002223,
+     "mean_pred": 0.013168,
+     "miscalibrated": true,
+     "oe": 0.158717,
+     "z": -21.490525
+    },
+    "policy": {
+     "auc": {
+      "est": 0.640069,
+      "hi": 0.692889,
+      "lo": 0.576563
+     },
+     "bad_rate": 0.00209,
+     "brier": 0.002093,
+     "mean_pred": 0.003207,
+     "miscalibrated": true,
+     "oe": 0.651733,
+     "z": -4.373372
+    },
+    "psi_ref": {
+     "fixed": {
+      "2020Q1": 0.038984,
+      "2020Q2": 0.143147,
+      "2020Q3": 0.174138,
+      "2020Q4": 0.157062
+     },
+     "rolling": {
+      "2020Q1": 0.075874,
+      "2020Q2": 0.217186,
+      "2020Q3": 0.264649,
+      "2020Q4": 0.240497
+     }
+    },
+    "recal": {
+     "auc": {
+      "est": 0.640069,
+      "hi": 0.692889,
+      "lo": 0.576563
+     },
+     "bad_rate": 0.00209,
+     "brier": 0.002093,
+     "mean_pred": 0.003207,
+     "miscalibrated": true,
+     "oe": 0.651733,
+     "z": -4.373372
+    },
+    "rolling": {
+     "auc": {
+      "est": 0.661804,
+      "hi": 0.714451,
+      "lo": 0.601508
+     },
+     "bad_rate": 0.00209,
+     "brier": 0.002083,
+     "mean_pred": 0.002943,
+     "miscalibrated": true,
+     "oe": 0.710166,
+     "z": -3.483077
+    },
+    "rule": {
+     "policy_in_band": false,
+     "r2": "recalibrate",
+     "ref_auc": 0.771305,
+     "ref_oe": 0.323168,
+     "ref_z": -17.344168,
+     "retrain": true
+    }
+   },
+   "reference": {
+    "assisted_share": 0.009123,
+    "bads": 208,
+    "loans": 45724,
+    "vintage": 2017
+   },
+   "sample": {
+    "bad_rate": 0.00209,
+    "bad_rate_incl_assisted": 0.016322,
+    "bads": 102,
+    "loans": 48803,
+    "loans_incl_assisted": 49870
+   },
+   "scorecard": {
+    "delta_no_crisis_minus_fixed": {
+     "est": -0.000325,
+     "hi": 0.014106,
+     "lo": -0.012412
+    },
+    "delta_rolling_minus_fixed": {
+     "est": 0.02174,
+     "hi": 0.049628,
+     "lo": -0.004891
+    },
+    "delta_rolling_minus_no_crisis": {
+     "est": 0.022065,
+     "hi": 0.045639,
+     "lo": -0.004589
+    },
+    "fixed": {
+     "auc": {
+      "est": 0.651195,
+      "hi": 0.705702,
+      "lo": 0.593342
+     },
+     "bad_rate": 0.00209,
+     "brier": 0.002129,
+     "mean_pred": 0.004916,
+     "miscalibrated": true,
+     "oe": 0.425107,
+     "z": -8.974258
+    },
+    "incl_assisted": {
+     "auc": 0.730134,
+     "bad_rate": 0.016322,
+     "brier": 0.016035,
+     "mean_pred": 0.005047,
+     "miscalibrated": true,
+     "oe": 3.234077,
+     "z": 35.72726
+    },
+    "no_crisis": {
+     "auc": {
+      "est": 0.65087,
+      "hi": 0.705587,
+      "lo": 0.594654
+     },
+     "bad_rate": 0.00209,
+     "brier": 0.002116,
+     "mean_pred": 0.004571,
+     "miscalibrated": true,
+     "oe": 0.457258,
+     "z": -8.162136
+    },
+    "policy": {
+     "auc": {
+      "est": 0.651195,
+      "hi": 0.705702,
+      "lo": 0.593342
+     },
+     "bad_rate": 0.00209,
+     "brier": 0.002091,
+     "mean_pred": 0.003087,
+     "miscalibrated": true,
+     "oe": 0.677104,
+     "z": -3.977507
+    },
+    "psi_ref": {
+     "fixed": {
+      "2020Q1": 0.060184,
+      "2020Q2": 0.192493,
+      "2020Q3": 0.230119,
+      "2020Q4": 0.19763
+     },
+     "rolling": {
+      "2020Q1": 0.150099,
+      "2020Q2": 0.490872,
+      "2020Q3": 0.687171,
+      "2020Q4": 0.703527
+     }
+    },
+    "recal": {
+     "auc": {
+      "est": 0.651195,
+      "hi": 0.705702,
+      "lo": 0.593342
+     },
+     "bad_rate": 0.00209,
+     "brier": 0.002091,
+     "mean_pred": 0.003087,
+     "miscalibrated": true,
+     "oe": 0.677104,
+     "z": -3.977507
+    },
+    "rolling": {
+     "auc": {
+      "est": 0.672935,
+      "hi": 0.728122,
+      "lo": 0.614511
+     },
+     "bad_rate": 0.00209,
+     "brier": 0.002085,
+     "mean_pred": 0.001862,
+     "miscalibrated": false,
+     "oe": 1.122756,
+     "z": 1.173652
+    },
+    "rule": {
+     "policy_in_band": false,
+     "r2": "recalibrate",
+     "ref_auc": 0.777416,
+     "ref_oe": 0.580714,
+     "ref_z": -8.04021,
+     "retrain": true
+    }
+   }
+  },
+  "2021": {
+   "lightgbm": {
+    "delta_no_crisis_minus_fixed": {
+     "est": -0.004815,
+     "hi": 0.010044,
+     "lo": -0.019341
+    },
+    "delta_rolling_minus_fixed": {
+     "est": 0.012797,
+     "hi": 0.034486,
+     "lo": -0.011196
+    },
+    "delta_rolling_minus_no_crisis": {
+     "est": 0.017613,
+     "hi": 0.03574,
+     "lo": -0.003431
+    },
+    "fixed": {
+     "auc": {
+      "est": 0.762036,
+      "hi": 0.80009,
+      "lo": 0.721759
+     },
+     "bad_rate": 0.002958,
+     "brier": 0.003042,
+     "mean_pred": 0.012394,
+     "miscalibrated": true,
+     "oe": 0.238666,
+     "z": -18.988549
+    },
+    "incl_assisted": {
+     "auc": 0.778299,
+     "bad_rate": 0.009701,
+     "brier": 0.009509,
+     "mean_pred": 0.012476,
+     "miscalibrated": true,
+     "oe": 0.777603,
+     "z": -5.595528
+    },
+    "no_crisis": {
+     "auc": {
+      "est": 0.757221,
+      "hi": 0.79493,
+      "lo": 0.715505
+     },
+     "bad_rate": 0.002958,
+     "brier": 0.003062,
+     "mean_pred": 0.013877,
+     "miscalibrated": true,
+     "oe": 0.213167,
+     "z": -20.759727
+    },
+    "policy": {
+     "auc": {
+      "est": 0.762036,
+      "hi": 0.80009,
+      "lo": 0.721759
+     },
+     "bad_rate": 0.002958,
+     "brier": 0.003042,
+     "mean_pred": 0.012394,
+     "miscalibrated": true,
+     "oe": 0.238666,
+     "z": -18.988549
+    },
+    "psi_ref": {
+     "fixed": {
+      "2021Q1": 0.004177,
+      "2021Q2": 0.024503,
+      "2021Q3": 0.044498,
+      "2021Q4": 0.060289
+     },
+     "rolling": {
+      "2021Q1": 0.00311,
+      "2021Q2": 0.025307,
+      "2021Q3": 0.045296,
+      "2021Q4": 0.062912
+     }
+    },
+    "recal": {
+     "auc": {
+      "est": 0.762036,
+      "hi": 0.80009,
+      "lo": 0.721759
+     },
+     "bad_rate": 0.002958,
+     "brier": 0.002939,
+     "mean_pred": 0.002585,
+     "miscalibrated": false,
+     "oe": 1.144397,
+     "z": 1.634572
+    },
+    "rolling": {
+     "auc": {
+      "est": 0.774834,
+      "hi": 0.813607,
+      "lo": 0.734101
+     },
+     "bad_rate": 0.002958,
+     "brier": 0.002941,
+     "mean_pred": 0.003972,
+     "miscalibrated": true,
+     "oe": 0.744645,
+     "z": -3.58357
+    },
+    "rule": {
+     "policy_in_band": false,
+     "r2": "escalate",
+     "ref_auc": 0.768183,
+     "ref_oe": 0.230919,
+     "ref_z": -20.042731,
+     "retrain": true
+    }
+   },
+   "reference": {
+    "assisted_share": 0.043295,
+    "bads": 153,
+    "loans": 44239,
+    "vintage": 2018
+   },
+   "sample": {
+    "bad_rate": 0.002958,
+    "bad_rate_incl_assisted": 0.009701,
+    "bads": 146,
+    "loans": 49357,
+    "loans_incl_assisted": 49890
+   },
+   "scorecard": {
+    "delta_no_crisis_minus_fixed": {
+     "est": 0.010413,
+     "hi": 0.023023,
+     "lo": -0.001352
+    },
+    "delta_rolling_minus_fixed": {
+     "est": 0.043236,
+     "hi": 0.062824,
+     "lo": 0.020782
+    },
+    "delta_rolling_minus_no_crisis": {
+     "est": 0.032823,
+     "hi": 0.050391,
+     "lo": 0.013945
+    },
+    "fixed": {
+     "auc": {
+      "est": 0.748393,
+      "hi": 0.788482,
+      "lo": 0.707535
+     },
+     "bad_rate": 0.002958,
+     "brier": 0.002964,
+     "mean_pred": 0.005713,
+     "miscalibrated": true,
+     "oe": 0.517752,
+     "z": -8.162108
+    },
+    "incl_assisted": {
+     "auc": 0.776529,
+     "bad_rate": 0.009701,
+     "brier": 0.009514,
+     "mean_pred": 0.005801,
+     "miscalibrated": true,
+     "oe": 1.672368,
+     "z": 11.53036
+    },
+    "no_crisis": {
+     "auc": {
+      "est": 0.758806,
+      "hi": 0.794935,
+      "lo": 0.718919
+     },
+     "bad_rate": 0.002958,
+     "brier": 0.002956,
+     "mean_pred": 0.005334,
+     "miscalibrated": true,
+     "oe": 0.554544,
+     "z": -7.279789
+    },
+    "policy": {
+     "auc": {
+      "est": 0.748393,
+      "hi": 0.788482,
+      "lo": 0.707535
+     },
+     "bad_rate": 0.002958,
+     "brier": 0.002964,
+     "mean_pred": 0.005713,
+     "miscalibrated": true,
+     "oe": 0.517752,
+     "z": -8.162108
+    },
+    "psi_ref": {
+     "fixed": {
+      "2021Q1": 0.003949,
+      "2021Q2": 0.019778,
+      "2021Q3": 0.043991,
+      "2021Q4": 0.060649
+     },
+     "rolling": {
+      "2021Q1": 0.016536,
+      "2021Q2": 0.015258,
+      "2021Q3": 0.032979,
+      "2021Q4": 0.051362
+     }
+    },
+    "recal": {
+     "auc": {
+      "est": 0.748393,
+      "hi": 0.788482,
+      "lo": 0.707535
+     },
+     "bad_rate": 0.002958,
+     "brier": 0.002941,
+     "mean_pred": 0.002111,
+     "miscalibrated": true,
+     "oe": 1.401184,
+     "z": 4.103309
+    },
+    "rolling": {
+     "auc": {
+      "est": 0.791629,
+      "hi": 0.826477,
+      "lo": 0.758775
+     },
+     "bad_rate": 0.002958,
+     "brier": 0.002932,
+     "mean_pred": 0.001953,
+     "miscalibrated": true,
+     "oe": 1.51457,
+     "z": 5.067235
+    },
+    "rule": {
+     "policy_in_band": false,
+     "r2": "escalate",
+     "ref_auc": 0.751837,
+     "ref_oe": 0.30308,
+     "ref_z": -15.977597,
+     "retrain": true
+    }
+   }
+  },
+  "2022": {
+   "lightgbm": {
+    "delta_no_crisis_minus_fixed": {
+     "est": 0.022427,
+     "hi": 0.032005,
+     "lo": 0.012607
+    },
+    "delta_rolling_minus_fixed": {
+     "est": 0.03239,
+     "hi": 0.051908,
+     "lo": 0.011288
+    },
+    "delta_rolling_minus_no_crisis": {
+     "est": 0.009964,
+     "hi": 0.026024,
+     "lo": -0.007627
+    },
+    "fixed": {
+     "auc": {
+      "est": 0.740242,
+      "hi": 0.761511,
+      "lo": 0.717008
+     },
+     "bad_rate": 0.008188,
+     "brier": 0.008932,
+     "mean_pred": 0.024216,
+     "miscalibrated": true,
+     "oe": 0.33811,
+     "z": -23.536573
+    },
+    "incl_assisted": {
+     "auc": 0.73836,
+     "bad_rate": 0.017879,
+     "brier": 0.017743,
+     "mean_pred": 0.024576,
+     "miscalibrated": true,
+     "oe": 0.727509,
+     "z": -9.847967
+    },
+    "no_crisis": {
+     "auc": {
+      "est": 0.762669,
+      "hi": 0.786273,
+      "lo": 0.738906
+     },
+     "bad_rate": 0.008188,
+     "brier": 0.008155,
+     "mean_pred": 0.017961,
+     "miscalibrated": true,
+     "oe": 0.455865,
+     "z": -16.343226
+    },
+    "policy": {
+     "auc": {
+      "est": 0.740242,
+      "hi": 0.761511,
+      "lo": 0.717008
+     },
+     "bad_rate": 0.008188,
+     "brier": 0.008932,
+     "mean_pred": 0.024216,
+     "miscalibrated": true,
+     "oe": 0.33811,
+     "z": -23.536573
+    },
+    "psi_ref": {
+     "fixed": {
+      "2022Q1": 0.050097,
+      "2022Q2": 0.229688,
+      "2022Q3": 0.608259,
+      "2022Q4": 1.554689
+     },
+     "rolling": {
+      "2022Q1": 0.0447,
+      "2022Q2": 0.132155,
+      "2022Q3": 0.166891,
+      "2022Q4": 0.178101
+     }
+    },
+    "recal": {
+     "auc": {
+      "est": 0.740242,
+      "hi": 0.761511,
+      "lo": 0.717008
+     },
+     "bad_rate": 0.008188,
+     "brier": 0.008223,
+     "mean_pred": 0.006422,
+     "miscalibrated": true,
+     "oe": 1.275028,
+     "z": 4.986889
+    },
+    "rolling": {
+     "auc": {
+      "est": 0.772633,
+      "hi": 0.795331,
+      "lo": 0.749761
+     },
+     "bad_rate": 0.008188,
+     "brier": 0.008082,
+     "mean_pred": 0.00439,
+     "miscalibrated": true,
+     "oe": 1.865122,
+     "z": 12.727408
+    },
+    "rule": {
+     "policy_in_band": false,
+     "r2": "escalate",
+     "ref_auc": 0.676506,
+     "ref_oe": 0.175075,
+     "ref_z": -20.325863,
+     "retrain": true
+    }
+   },
+   "reference": {
+    "assisted_share": 0.066388,
+    "bads": 104,
+    "loans": 42822,
+    "vintage": 2019
+   },
+   "sample": {
+    "bad_rate": 0.008188,
+    "bad_rate_incl_assisted": 0.017879,
+    "bads": 401,
+    "loans": 48976,
+    "loans_incl_assisted": 49779
+   },
+   "scorecard": {
+    "delta_no_crisis_minus_fixed": {
+     "est": 0.034926,
+     "hi": 0.043309,
+     "lo": 0.026933
+    },
+    "delta_rolling_minus_fixed": {
+     "est": 0.051659,
+     "hi": 0.069287,
+     "lo": 0.03523
+    },
+    "delta_rolling_minus_no_crisis": {
+     "est": 0.016733,
+     "hi": 0.033333,
+     "lo": 0.003101
+    },
+    "fixed": {
+     "auc": {
+      "est": 0.725281,
+      "hi": 0.748721,
+      "lo": 0.70191
+     },
+     "bad_rate": 0.008188,
+     "brier": 0.008828,
+     "mean_pred": 0.02118,
+     "miscalibrated": true,
+     "oe": 0.386578,
+     "z": -20.450081
+    },
+    "incl_assisted": {
+     "auc": 0.728147,
+     "bad_rate": 0.017879,
+     "brier": 0.017626,
+     "mean_pred": 0.021591,
+     "miscalibrated": true,
+     "oe": 0.828096,
+     "z": -5.836861
+    },
+    "no_crisis": {
+     "auc": {
+      "est": 0.760206,
+      "hi": 0.782252,
+      "lo": 0.735461
+     },
+     "bad_rate": 0.008188,
+     "brier": 0.00815,
+     "mean_pred": 0.013448,
+     "miscalibrated": true,
+     "oe": 0.608825,
+     "z": -10.224446
+    },
+    "policy": {
+     "auc": {
+      "est": 0.725281,
+      "hi": 0.748721,
+      "lo": 0.70191
+     },
+     "bad_rate": 0.008188,
+     "brier": 0.008828,
+     "mean_pred": 0.02118,
+     "miscalibrated": true,
+     "oe": 0.386578,
+     "z": -20.450081
+    },
+    "psi_ref": {
+     "fixed": {
+      "2022Q1": 0.053372,
+      "2022Q2": 0.494866,
+      "2022Q3": 1.065067,
+      "2022Q4": 2.078454
+     },
+     "rolling": {
+      "2022Q1": 0.096331,
+      "2022Q2": 0.54105,
+      "2022Q3": 0.737411,
+      "2022Q4": 0.829359
+     }
+    },
+    "recal": {
+     "auc": {
+      "est": 0.725281,
+      "hi": 0.748721,
+      "lo": 0.70191
+     },
+     "bad_rate": 0.008188,
+     "brier": 0.008102,
+     "mean_pred": 0.004083,
+     "miscalibrated": true,
+     "oe": 2.005413,
+     "z": 14.265186
+    },
+    "rolling": {
+     "auc": {
+      "est": 0.77694,
+      "hi": 0.7993,
+      "lo": 0.754681
+     },
+     "bad_rate": 0.008188,
+     "brier": 0.008057,
+     "mean_pred": 0.004666,
+     "miscalibrated": true,
+     "oe": 1.754814,
+     "z": 11.482079
+    },
+    "rule": {
+     "policy_in_band": false,
+     "r2": "escalate",
+     "ref_auc": 0.69437,
+     "ref_oe": 0.285613,
+     "ref_z": -13.859364,
+     "retrain": true
+    }
+   }
+  },
+  "2023": {
+   "lightgbm": {
+    "delta_no_crisis_minus_fixed": {
+     "est": 0.021107,
+     "hi": 0.029372,
+     "lo": 0.011821
+    },
+    "delta_rolling_minus_fixed": {
+     "est": 0.031974,
+     "hi": 0.049135,
+     "lo": 0.013653
+    },
+    "delta_rolling_minus_no_crisis": {
+     "est": 0.010867,
+     "hi": 0.027921,
+     "lo": -0.005123
+    },
+    "fixed": {
+     "auc": {
+      "est": 0.74391,
+      "hi": 0.764634,
+      "lo": 0.725565
+     },
+     "bad_rate": 0.008791,
+     "brier": 0.012037,
+     "mean_pred": 0.044436,
+     "miscalibrated": true,
+     "oe": 0.197845,
+     "z": -39.725805
+    },
+    "incl_assisted": {
+     "auc": 0.754271,
+     "bad_rate": 0.017038,
+     "brier": 0.018768,
+     "mean_pred": 0.04509,
+     "miscalibrated": true,
+     "oe": 0.377858,
+     "z": -31.269205
+    },
+    "no_crisis": {
+     "auc": {
+      "est": 0.765017,
+      "hi": 0.786482,
+      "lo": 0.743779
+     },
+     "bad_rate": 0.008791,
+     "brier": 0.008898,
+     "mean_pred": 0.023195,
+     "miscalibrated": true,
+     "oe": 0.379028,
+     "z": -21.351374
+    },
+    "policy": {
+     "auc": {
+      "est": 0.74391,
+      "hi": 0.764634,
+      "lo": 0.725565
+     },
+     "bad_rate": 0.008791,
+     "brier": 0.012037,
+     "mean_pred": 0.044436,
+     "miscalibrated": true,
+     "oe": 0.197845,
+     "z": -39.725805
+    },
+    "psi_ref": {
+     "fixed": {
+      "2023Q1": 0.366814,
+      "2023Q2": 0.359501,
+      "2023Q3": 0.563992,
+      "2023Q4": 0.765428
+     },
+     "rolling": {
+      "2023Q1": 0.002241,
+      "2023Q2": 0.007839,
+      "2023Q3": 0.002951,
+      "2023Q4": 0.006337
+     }
+    },
+    "recal": {
+     "auc": {
+      "est": 0.74391,
+      "hi": 0.764634,
+      "lo": 0.725565
+     },
+     "bad_rate": 0.008791,
+     "brier": 0.009423,
+     "mean_pred": 0.016945,
+     "miscalibrated": true,
+     "oe": 0.51881,
+     "z": -14.5055
+    },
+    "rolling": {
+     "auc": {
+      "est": 0.775883,
+      "hi": 0.794907,
+      "lo": 0.756705
+     },
+     "bad_rate": 0.008791,
+     "brier": 0.008694,
+     "mean_pred": 0.003711,
+     "miscalibrated": true,
+     "oe": 2.368812,
+     "z": 18.540039
+    },
+    "rule": {
+     "policy_in_band": false,
+     "r2": "escalate",
+     "ref_auc": 0.635511,
+     "ref_oe": 0.185046,
+     "ref_z": -18.609225,
+     "retrain": true
+    }
+   },
+   "reference": {
+    "assisted_share": 0.022502,
+    "bads": 95,
+    "loans": 44613,
+    "vintage": 2020
+   },
+   "sample": {
+    "bad_rate": 0.008791,
+    "bad_rate_incl_assisted": 0.017038,
+    "bads": 432,
+    "loans": 49139,
+    "loans_incl_assisted": 49772
+   },
+   "scorecard": {
+    "delta_no_crisis_minus_fixed": {
+     "est": 0.014601,
+     "hi": 0.023214,
+     "lo": 0.006721
+    },
+    "delta_rolling_minus_fixed": {
+     "est": 0.03053,
+     "hi": 0.045539,
+     "lo": 0.013666
+    },
+    "delta_rolling_minus_no_crisis": {
+     "est": 0.015928,
+     "hi": 0.029138,
+     "lo": 0.001794
+    },
+    "fixed": {
+     "auc": {
+      "est": 0.761757,
+      "hi": 0.782195,
+      "lo": 0.740068
+     },
+     "bad_rate": 0.008791,
+     "brier": 0.011238,
+     "mean_pred": 0.041886,
+     "miscalibrated": true,
+     "oe": 0.20989,
+     "z": -37.72832
+    },
+    "incl_assisted": {
+     "auc": 0.765824,
+     "bad_rate": 0.017038,
+     "brier": 0.017959,
+     "mean_pred": 0.04255,
+     "miscalibrated": true,
+     "oe": 0.400413,
+     "z": -29.069363
+    },
+    "no_crisis": {
+     "auc": {
+      "est": 0.776358,
+      "hi": 0.796423,
+      "lo": 0.75662
+     },
+     "bad_rate": 0.008791,
+     "brier": 0.008927,
+     "mean_pred": 0.020112,
+     "miscalibrated": true,
+     "oe": 0.437118,
+     "z": -18.129809
+    },
+    "policy": {
+     "auc": {
+      "est": 0.761757,
+      "hi": 0.782195,
+      "lo": 0.740068
+     },
+     "bad_rate": 0.008791,
+     "brier": 0.011238,
+     "mean_pred": 0.041886,
+     "miscalibrated": true,
+     "oe": 0.20989,
+     "z": -37.72832
+    },
+    "psi_ref": {
+     "fixed": {
+      "2023Q1": 0.368895,
+      "2023Q2": 0.353,
+      "2023Q3": 0.483638,
+      "2023Q4": 0.586447
+     },
+     "rolling": {
+      "2023Q1": 0.023788,
+      "2023Q2": 0.003527,
+      "2023Q3": 0.005934,
+      "2023Q4": 0.008732
+     }
+    },
+    "recal": {
+     "auc": {
+      "est": 0.761757,
+      "hi": 0.782195,
+      "lo": 0.740068
+     },
+     "bad_rate": 0.008791,
+     "brier": 0.00867,
+     "mean_pred": 0.006144,
+     "miscalibrated": true,
+     "oe": 1.430863,
+     "z": 7.517148
+    },
+    "rolling": {
+     "auc": {
+      "est": 0.792286,
+      "hi": 0.811348,
+      "lo": 0.773158
+     },
+     "bad_rate": 0.008791,
+     "brier": 0.008654,
+     "mean_pred": 0.004253,
+     "miscalibrated": true,
+     "oe": 2.066991,
+     "z": 15.51438
+    },
+    "rule": {
+     "policy_in_band": false,
+     "r2": "escalate",
+     "ref_auc": 0.654111,
+     "ref_oe": 0.431236,
+     "ref_z": -8.507856,
+     "retrain": true
+    }
+   }
+  },
+  "2024": {
+   "lightgbm": {
+    "delta_no_crisis_minus_fixed": {
+     "est": 0.023393,
+     "hi": 0.03927,
+     "lo": 0.008147
+    },
+    "delta_rolling_minus_fixed": {
+     "est": -0.006326,
+     "hi": 0.024614,
+     "lo": -0.033313
+    },
+    "delta_rolling_minus_no_crisis": {
+     "est": -0.029719,
+     "hi": -0.004486,
+     "lo": -0.052564
+    },
+    "fixed": {
+     "auc": {
+      "est": 0.805126,
+      "hi": 0.829838,
+      "lo": 0.779108
+     },
+     "bad_rate": 0.010325,
+     "brier": 0.013508,
+     "mean_pred": 0.046053,
+     "miscalibrated": true,
+     "oe": 0.224206,
+     "z": -25.455392
+    },
+    "incl_assisted": {
+     "auc": 0.795749,
+     "bad_rate": 0.016833,
+     "brier": 0.01872,
+     "mean_pred": 0.046604,
+     "miscalibrated": true,
+     "oe": 0.361187,
+     "z": -21.218088
+    },
+    "no_crisis": {
+     "auc": {
+      "est": 0.828519,
+      "hi": 0.851848,
+      "lo": 0.80475
+     },
+     "bad_rate": 0.010325,
+     "brier": 0.010194,
+     "mean_pred": 0.023175,
+     "miscalibrated": true,
+     "oe": 0.445543,
+     "z": -12.357441
+    },
+    "policy": {
+     "auc": {
+      "est": 0.805126,
+      "hi": 0.829838,
+      "lo": 0.779108
+     },
+     "bad_rate": 0.010325,
+     "brier": 0.01098,
+     "mean_pred": 0.01924,
+     "miscalibrated": true,
+     "oe": 0.53666,
+     "z": -9.695057
+    },
+    "psi_ref": {
+     "fixed": {
+      "2024Q1": 0.00143,
+      "2024Q2": 0.009719
+     },
+     "rolling": {
+      "2024Q1": 0.001949,
+      "2024Q2": 0.003623
+     }
+    },
+    "recal": {
+     "auc": {
+      "est": 0.805126,
+      "hi": 0.829838,
+      "lo": 0.779108
+     },
+     "bad_rate": 0.010325,
+     "brier": 0.01098,
+     "mean_pred": 0.01924,
+     "miscalibrated": true,
+     "oe": 0.53666,
+     "z": -9.695057
+    },
+    "rolling": {
+     "auc": {
+      "est": 0.798801,
+      "hi": 0.827965,
+      "lo": 0.771121
+     },
+     "bad_rate": 0.010325,
+     "brier": 0.010225,
+     "mean_pred": 0.003375,
+     "miscalibrated": true,
+     "oe": 3.059723,
+     "z": 17.220881
+    },
+    "rule": {
+     "policy_in_band": false,
+     "r2": "recalibrate",
+     "ref_auc": 0.764364,
+     "ref_oe": 0.229317,
+     "ref_z": -18.4319,
+     "retrain": true
+    }
+   },
+   "reference": {
+    "assisted_share": 0.010568,
+    "bads": 129,
+    "loans": 45596,
+    "vintage": 2021
+   },
+   "sample": {
+    "bad_rate": 0.010325,
+    "bad_rate_incl_assisted": 0.016833,
+    "bads": 213,
+    "loans": 20629,
+    "loans_incl_assisted": 20852
+   },
+   "scorecard": {
+    "delta_no_crisis_minus_fixed": {
+     "est": 0.015644,
+     "hi": 0.026899,
+     "lo": 0.003571
+    },
+    "delta_rolling_minus_fixed": {
+     "est": 0.027674,
+     "hi": 0.052607,
+     "lo": 0.004658
+    },
+    "delta_rolling_minus_no_crisis": {
+     "est": 0.012029,
+     "hi": 0.032951,
+     "lo": -0.005957
+    },
+    "fixed": {
+     "auc": {
+      "est": 0.796585,
+      "hi": 0.819382,
+      "lo": 0.771257
+     },
+     "bad_rate": 0.010325,
+     "brier": 0.012848,
+     "mean_pred": 0.043903,
+     "miscalibrated": true,
+     "oe": 0.235182,
+     "z": -24.362509
+    },
+    "incl_assisted": {
+     "auc": 0.793326,
+     "bad_rate": 0.016833,
+     "brier": 0.018126,
+     "mean_pred": 0.044458,
+     "miscalibrated": true,
+     "oe": 0.378627,
+     "z": -20.039114
+    },
+    "no_crisis": {
+     "auc": {
+      "est": 0.81223,
+      "hi": 0.834246,
+      "lo": 0.789217
+     },
+     "bad_rate": 0.010325,
+     "brier": 0.010332,
+     "mean_pred": 0.020511,
+     "miscalibrated": true,
+     "oe": 0.503414,
+     "z": -10.494691
+    },
+    "policy": {
+     "auc": {
+      "est": 0.796585,
+      "hi": 0.819382,
+      "lo": 0.771257
+     },
+     "bad_rate": 0.010325,
+     "brier": 0.010119,
+     "mean_pred": 0.015797,
+     "miscalibrated": true,
+     "oe": 0.653623,
+     "z": -6.358122
+    },
+    "psi_ref": {
+     "fixed": {
+      "2024Q1": 0.001438,
+      "2024Q2": 0.006428
+     },
+     "rolling": {
+      "2024Q1": 0.00559,
+      "2024Q2": 0.011309
+     }
+    },
+    "recal": {
+     "auc": {
+      "est": 0.796585,
+      "hi": 0.819382,
+      "lo": 0.771257
+     },
+     "bad_rate": 0.010325,
+     "brier": 0.010119,
+     "mean_pred": 0.015797,
+     "miscalibrated": true,
+     "oe": 0.653623,
+     "z": -6.358122
+    },
+    "rolling": {
+     "auc": {
+      "est": 0.824259,
+      "hi": 0.846122,
+      "lo": 0.800731
+     },
+     "bad_rate": 0.010325,
+     "brier": 0.010134,
+     "mean_pred": 0.004102,
+     "miscalibrated": true,
+     "oe": 2.517163,
+     "z": 14.034667
+    },
+    "rule": {
+     "policy_in_band": false,
+     "r2": "recalibrate",
+     "ref_auc": 0.746899,
+     "ref_oe": 0.501153,
+     "ref_z": -8.066148,
+     "retrain": true
+    }
+   }
+  }
+ },
+ "csi_mean_test": {
+  "channel": 2.726227,
+  "classic_fico": 0.07463,
+  "loan_purpose": 0.480964,
+  "mi_pct": 0.183641,
+  "msa": 0.330437,
+  "number_of_borrowers": 0.048943,
+  "original_cltv": 0.105511,
+  "original_dti": 1.212455,
+  "original_interest_rate": 4.634366,
+  "original_loan_term": 0.067892,
+  "original_ltv": 0.195676,
+  "original_upb": 0.407762,
+  "property_state": 0.067557
+ },
+ "csi_peak": {
+  "channel": {
+   "csi": 2.9201,
+   "quarter": "2023Q4"
+  },
+  "classic_fico": {
+   "csi": 0.29846,
+   "quarter": "2011Q4"
+  },
+  "loan_purpose": {
+   "csi": 1.300455,
+   "quarter": "2023Q3"
+  },
+  "mi_pct": {
+   "csi": 0.41158,
+   "quarter": "2023Q2"
+  },
+  "msa": {
+   "csi": 0.50058,
+   "quarter": "2024Q1"
+  },
+  "number_of_borrowers": {
+   "csi": 0.093728,
+   "quarter": "2022Q1"
+  },
+  "original_cltv": {
+   "csi": 0.235308,
+   "quarter": "2012Q2"
+  },
+  "original_dti": {
+   "csi": 1.592636,
+   "quarter": "2023Q4"
+  },
+  "original_interest_rate": {
+   "csi": 8.118699,
+   "quarter": "2021Q1"
+  },
+  "original_loan_term": {
+   "csi": 0.338112,
+   "quarter": "2011Q4"
+  },
+  "original_ltv": {
+   "csi": 0.40034,
+   "quarter": "2023Q1"
+  },
+  "original_upb": {
+   "csi": 0.73428,
+   "quarter": "2024Q1"
+  },
+  "property_state": {
+   "csi": 0.129828,
+   "quarter": "2023Q1"
+  }
+ },
+ "periods": {
+  "covid": {
+   "bad_rate": 0.002526,
+   "bads": 248,
+   "lightgbm": {
+    "auc": 0.71303,
+    "bad_rate": 0.002526,
+    "brier": 0.002625,
+    "mean_pred": 0.011948,
+    "miscalibrated": true,
+    "oe": 0.211462,
+    "psi": 0.944103,
+    "z": -27.22333
+   },
+   "loans": 98160,
+   "scorecard": {
+    "auc": 0.710203,
+    "bad_rate": 0.002526,
+    "brier": 0.002549,
+    "mean_pred": 0.005317,
+    "miscalibrated": true,
+    "oe": 0.475162,
+    "psi": 1.201501,
+    "z": -12.084307
+   }
+  },
+  "crisis": {
+   "bad_rate": 0.035748,
+   "bads": 5337,
+   "lightgbm": {
+    "auc": 0.892774,
+    "bad_rate": 0.035748,
+    "brier": 0.030266,
+    "mean_pred": 0.02887,
+    "miscalibrated": true,
+    "oe": 1.238249,
+    "psi": 0.001228,
+    "z": 16.353685
+   },
+   "loans": 149293,
+   "scorecard": {
+    "auc": 0.866975,
+    "bad_rate": 0.035748,
+    "brier": 0.031039,
+    "mean_pred": 0.028397,
+    "miscalibrated": true,
+    "oe": 1.258871,
+    "psi": 0.002061,
+    "z": 17.876053
+   }
+  },
+  "normal": {
+   "bad_rate": 0.008655,
+   "bads": 6151,
+   "lightgbm": {
+    "auc": 0.845942,
+    "bad_rate": 0.008655,
+    "brier": 0.008689,
+    "mean_pred": 0.020616,
+    "miscalibrated": true,
+    "oe": 0.419811,
+    "psi": 0.077959,
+    "z": -72.370913
+   },
+   "loans": 710715,
+   "scorecard": {
+    "auc": 0.821401,
+    "bad_rate": 0.008655,
+    "brier": 0.008734,
+    "mean_pred": 0.015804,
+    "miscalibrated": true,
+    "oe": 0.54764,
+    "psi": 0.140389,
+    "z": -49.91011
+   }
+  }
+ },
+ "psi_thresholds": [
+  0.1,
+  0.25
+ ],
+ "quarters": {
+  "first": "2005Q1",
+  "last": "2024Q2",
+  "min_loans": 8325,
+  "n": 78,
+  "test": 30
+ },
+ "rules": {
+  "lightgbm": {
+   "psi_max": 1.188359,
+   "psi_max_quarter": "2020Q3",
+   "ref_fixed_fired_act": [
+    "2022Q4",
+    "2023Q1",
+    "2023Q2",
+    "2023Q3",
+    "2023Q4"
+   ],
+   "ref_fixed_fired_watch": [
+    "2020Q3",
+    "2020Q4",
+    "2022Q3",
+    "2022Q4",
+    "2023Q1",
+    "2023Q2",
+    "2023Q3",
+    "2023Q4"
+   ],
+   "ref_rolling_fired_act": [],
+   "ref_rolling_fired_watch": [
+    "2018Q3",
+    "2018Q4",
+    "2019Q4",
+    "2020Q3",
+    "2020Q4",
+    "2022Q3",
+    "2022Q4"
+   ],
+   "test_quarters_act": 27,
+   "test_quarters_watch": 30,
+   "years_fixed_in_band": [],
+   "years_no_crisis_better": [
+    "2022",
+    "2023",
+    "2024"
+   ],
+   "years_no_crisis_better_than_rolling": [
+    "2024"
+   ],
+   "years_policy_in_band": [
+    "2017"
+   ],
+   "years_r2_escalate": [
+    "2021",
+    "2022",
+    "2023"
+   ],
+   "years_r2_ok": [],
+   "years_r2_recalibrate": [
+    "2017",
+    "2018",
+    "2019",
+    "2020",
+    "2024"
+   ],
+   "years_recal_brier_better": [
+    "2017",
+    "2018",
+    "2019",
+    "2020",
+    "2021",
+    "2022",
+    "2023",
+    "2024"
+   ],
+   "years_recal_still_off": [
+    "2018",
+    "2019",
+    "2020",
+    "2022",
+    "2023",
+    "2024"
+   ],
+   "years_retrain": [
+    "2020",
+    "2021",
+    "2022",
+    "2023",
+    "2024"
+   ],
+   "years_rolling_better": [
+    "2019",
+    "2022",
+    "2023"
+   ],
+   "years_rolling_better_than_no_crisis": [],
+   "yoy_fired_act": [
+    "2022Q3",
+    "2022Q4",
+    "2023Q1",
+    "2023Q2",
+    "2023Q3"
+   ],
+   "yoy_fired_watch": [
+    "2020Q1",
+    "2020Q2",
+    "2020Q3",
+    "2022Q2",
+    "2022Q3",
+    "2022Q4",
+    "2023Q1",
+    "2023Q2",
+    "2023Q3"
+   ]
+  },
+  "scorecard": {
+   "psi_max": 1.486331,
+   "psi_max_quarter": "2020Q3",
+   "ref_fixed_fired_act": [
+    "2022Q3",
+    "2022Q4",
+    "2023Q1",
+    "2023Q2",
+    "2023Q3",
+    "2023Q4"
+   ],
+   "ref_fixed_fired_watch": [
+    "2018Q4",
+    "2019Q4",
+    "2020Q3",
+    "2020Q4",
+    "2022Q3",
+    "2022Q4",
+    "2023Q1",
+    "2023Q2",
+    "2023Q3",
+    "2023Q4"
+   ],
+   "ref_rolling_fired_act": [
+    "2019Q4",
+    "2020Q3",
+    "2020Q4",
+    "2022Q3",
+    "2022Q4"
+   ],
+   "ref_rolling_fired_watch": [
+    "2017Q2",
+    "2017Q3",
+    "2017Q4",
+    "2018Q4",
+    "2019Q4",
+    "2020Q1",
+    "2020Q2",
+    "2020Q3",
+    "2020Q4",
+    "2022Q3",
+    "2022Q4"
+   ],
+   "test_quarters_act": 26,
+   "test_quarters_watch": 30,
+   "years_fixed_in_band": [],
+   "years_no_crisis_better": [
+    "2018",
+    "2019",
+    "2022",
+    "2023",
+    "2024"
+   ],
+   "years_no_crisis_better_than_rolling": [],
+   "years_policy_in_band": [
+    "2017"
+   ],
+   "years_r2_escalate": [
+    "2021",
+    "2022",
+    "2023"
+   ],
+   "years_r2_ok": [],
+   "years_r2_recalibrate": [
+    "2017",
+    "2018",
+    "2019",
+    "2020",
+    "2024"
+   ],
+   "years_recal_brier_better": [
+    "2017",
+    "2018",
+    "2019",
+    "2020",
+    "2021",
+    "2022",
+    "2023",
+    "2024"
+   ],
+   "years_recal_still_off": [
+    "2017",
+    "2018",
+    "2019",
+    "2020",
+    "2021",
+    "2022",
+    "2023",
+    "2024"
+   ],
+   "years_retrain": [
+    "2017",
+    "2020",
+    "2021",
+    "2022",
+    "2023",
+    "2024"
+   ],
+   "years_rolling_better": [
+    "2018",
+    "2019",
+    "2021",
+    "2022",
+    "2023",
+    "2024"
+   ],
+   "years_rolling_better_than_no_crisis": [
+    "2021",
+    "2022",
+    "2023"
+   ],
+   "yoy_fired_act": [
+    "2022Q3",
+    "2022Q4",
+    "2023Q1",
+    "2023Q2",
+    "2023Q3"
+   ],
+   "yoy_fired_watch": [
+    "2018Q4",
+    "2019Q4",
+    "2020Q1",
+    "2020Q2",
+    "2020Q3",
+    "2022Q2",
+    "2022Q3",
+    "2022Q4",
+    "2023Q1",
+    "2023Q2",
+    "2023Q3"
+   ]
+  }
+ }
+}
