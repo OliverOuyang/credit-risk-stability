@@ -14,7 +14,8 @@ rolling:                       # annual retrain for backtest year Y
 recalibration:
   method: platt                # logistic on logit(p), fitted on the mature part of vintage Y-3
   fit_year_back: 3
-  max_assisted_share: 0.02     # guard: if Y-3 had more forbearance-flagged loans than this, no Platt; escalate
+  max_assisted_share: 0.02     # guard: if Y-3 had more forbearance-flagged loans than this, no Platt; escalate.
+                               # chosen after looking at the backtest (ref years 2.3% vs 1.1%), not validated independently
 crisis_sensitivity:
   drop_years: [2007, 2008, 2009]  # fixed models refitted on train vintages without these
 rules:

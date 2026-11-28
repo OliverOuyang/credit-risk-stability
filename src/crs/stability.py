@@ -97,7 +97,8 @@ def first_sustained(bands, labels, level, k):
 
 
 def quarterly(wide, preds, sc_bins, kept, woe, base, cfg):
-    """One row per origination quarter plus a long CSI table; PSI/CSI against the train segment."""
+    """One row per origination quarter plus a long CSI table; PSI/CSI against the train segment.
+    PSI/CSI use every loan of the quarter (the assistance flag is only known later); AUC/O/E the main sample."""
     level = load_cfg("model")["evaluation"]["ci_level"]
     rows, csi_rows, sh = [], [], {m: {} for m in MODELS}
     for qi, d in wide.groupby("qi"):
@@ -108,7 +109,7 @@ def quarterly(wide, preds, sc_bins, kept, woe, base, cfg):
              "n_incl_assisted": len(d), "bad_rate_incl_assisted": round(float(d["bad"].mean()), R)}
         for m in MODELS:
             p = preds[m][main.index].to_numpy()
-            sh[m][qi] = shares(sc_bins[m][0](p), sc_bins[m][1])
+            sh[m][qi] = shares(sc_bins[m][0](preds[m][d.index].to_numpy()), sc_bins[m][1])
             r[f"psi_{m}"] = round(psi(base[m], sh[m][qi]), R)
             # year-over-year: same quarter one year earlier as the baseline (train-decile bins)
             r[f"psi_yoy_{m}"] = round(psi(sh[m][qi - 4], sh[m][qi]), R) if qi - 4 in sh[m] else None
@@ -116,8 +117,8 @@ def quarterly(wide, preds, sc_bins, kept, woe, base, cfg):
             r[f"auc_{m}"] = round(auc_ks(y, p)[0], R) if y.sum() >= cfg["min_bads_for_auc"] else None
             r[f"oe_{m}"] = calib(y, p, level)["oe"]
         for c in kept:
-            b = woe._bin(c, main[c])
-            csi_rows.append({"quarter": r["quarter"], "feature": c, "n": len(main),
+            b = woe._bin(c, d[c])
+            csi_rows.append({"quarter": r["quarter"], "feature": c, "n": len(d),
                              "csi": round(psi(base["csi"][c], shares(b, list(base["csi_labels"][c]))), R)})
         rows.append(r)
     return pd.DataFrame(rows), pd.DataFrame(csi_rows)
@@ -194,8 +195,9 @@ def annual(wide, model_frame, fixed, mcfg, cfg, seed, valid_auc):
             res[m]["rule"] = {"ref_oe": ref_cal["oe"], "ref_z": ref_cal["z"], "ref_auc": round(ref_auc, R),
                               "r2": action, "retrain": bool(ref_auc < valid_auc[m]["lo"]),
                               "policy_in_band": bool(band[0] <= pol["oe"] <= band[1])}
-            res[m]["psi_ref"] = {"rolling": ref_psi(roll[m], d, mature(main[vy == Y - cfg["rolling"]["valid_year_back"]], Y, months)),
-                                 "fixed": ref_psi(fixed[m], d, ref)}
+            # R1 reference: all applications of the 4 quarters before deployment (no labels needed)
+            ref_q = wide[wide.qi.between(Y * 4 - 4, Y * 4 - 1)]
+            res[m]["psi_ref"] = {"rolling": ref_psi(roll[m], da, ref_q), "fixed": ref_psi(fixed[m], da, ref_q)}
         out[str(Y)] = res
     return out
 

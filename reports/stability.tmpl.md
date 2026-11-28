@@ -4,26 +4,28 @@
 
 ## 结论
 
-1. **固定模型（2005–2010 训练一次不动）的区分度在下降，但大半是训练集里的危机年份造成的，不全是「老化」。** 每年用最近数据重训（滚动重训）比固定模型显著更好的年份：评分卡 {{stability.rules.scorecard.years_rolling_better}}，LightGBM {{stability.rules.lightgbm.years_rolling_better}}。但只把 {{config.stability.crisis_sensitivity.drop_years}} 年从训练集去掉（其余照旧用老数据），就能拿回很大一部分：评分卡 {{stability.rules.scorecard.years_no_crisis_better}} 年、LightGBM {{stability.rules.lightgbm.years_no_crisis_better}} 年显著更好。滚动重训再比「去掉危机」显著更好的，只有评分卡 {{stability.rules.scorecard.years_rolling_better_than_no_crisis}} 年；LightGBM 没有一年，2024 年反而是「去掉危机」更好（{{stability.rules.lightgbm.years_no_crisis_better_than_rolling}}）。纯「老化」只在评分卡上看得到，而且幅度小于危机样本的影响。
-2. **2019–2020 年主样本 AUC 下跌，主要是「事后剔除宽限贷款」带来的样本选择偏差，叠加疫情冲击，不是模型本身的问题。** 主样本剔除了表现期内带宽限标记的贷款，2019 年发放的坏账率因此从 {{stability.annual.2019.sample.bad_rate_incl_assisted:.2%}} 降到 {{stability.annual.2019.sample.bad_rate:.2%}}，大部分潜在违约者被拿掉了。不剔除时，评分卡 2019、2020 年 AUC 是 {{stability.annual.2019.scorecard.incl_assisted.auc:.3f}}、{{stability.annual.2020.scorecard.incl_assisted.auc:.3f}}，高于主样本的 {{stability.annual.2019.scorecard.fixed.auc.est:.3f}}、{{stability.annual.2020.scorecard.fixed.auc.est:.3f}}。滚动重训在这两年仍有提升（评分卡 2019 年 {{stability.annual.2019.scorecard.delta_rolling_minus_fixed.est:.4f}}），但它的训练数据也在疫情前，没法用它单独分出「环境」和「老化」。
+1. **固定模型（2005–2010 训练一次不动）的区分度在下降，一部分来自训练集里的危机年份，一部分来自没用上近期数据（近似「老化」）。** 每年用最近数据重训（滚动重训）比固定模型显著更好的年份：评分卡 {{stability.rules.scorecard.years_rolling_better}}，LightGBM {{stability.rules.lightgbm.years_rolling_better}}。但只把 {{config.stability.crisis_sensitivity.drop_years}} 年从训练集去掉（其余照旧用老数据），就能拿回很大一部分：评分卡 {{stability.rules.scorecard.years_no_crisis_better}} 年、LightGBM {{stability.rules.lightgbm.years_no_crisis_better}} 年显著更好。滚动重训再比「去掉危机」显著更好的，只有评分卡 {{stability.rules.scorecard.years_rolling_better_than_no_crisis}} 年；LightGBM 没有一年，2024 年反而是「去掉危机」更好（{{stability.rules.lightgbm.years_no_crisis_better_than_rolling}}）。两者谁大因年而异：评分卡 2022 年危机样本的影响更大（去掉危机 − 固定 {{stability.annual.2022.scorecard.delta_no_crisis_minus_fixed.est:.4f}}，滚动 − 去掉危机 {{stability.annual.2022.scorecard.delta_rolling_minus_no_crisis.est:.4f}}），2021、2023 年近期数据重训的额外收益更大（2021 年 {{stability.annual.2021.scorecard.delta_no_crisis_minus_fixed.est:.4f}} 对 {{stability.annual.2021.scorecard.delta_rolling_minus_no_crisis.est:.4f}}）。「滚动 − 去掉危机」只是近似老化，两边训练年数、早停年不同，见设置。
+2. **2019–2020 年主样本 AUC 下跌，至少部分来自事后剔除宽限贷款造成的样本选择偏差，叠加疫情冲击；两种口径都有偏，没法定量分开。** 主样本剔除了表现期内带宽限标记的贷款，2019 年发放的坏账率因此从 {{stability.annual.2019.sample.bad_rate_incl_assisted:.2%}}（含宽限，会把宽限期内的「逾期」也算成违约，偏高）降到 {{stability.annual.2019.sample.bad_rate:.2%}}（剔除后，偏低）。不剔除时，评分卡 2019、2020 年 AUC 是 {{stability.annual.2019.scorecard.incl_assisted.auc:.3f}}、{{stability.annual.2020.scorecard.incl_assisted.auc:.3f}}，高于主样本的 {{stability.annual.2019.scorecard.fixed.auc.est:.3f}}、{{stability.annual.2020.scorecard.fixed.auc.est:.3f}}，但仍明显低于 2017 年的 {{stability.annual.2017.scorecard.incl_assisted.auc:.3f}}，所以模型本身在这两年也确实变弱了。滚动重训在这两年仍有提升（评分卡 2019 年 {{stability.annual.2019.scorecard.delta_rolling_minus_fixed.est:.4f}}），但它的训练数据也在疫情前，没法用它单独分出「环境」和「老化」。
 3. **训练集含危机年份，是概率偏高的主要来源之一。** 去掉危机年份后平均预测违约率大约减半（2023 年评分卡 {{stability.annual.2023.scorecard.fixed.mean_pred:.2%}} → {{stability.annual.2023.scorecard.no_crisis.mean_pred:.2%}}，实际 {{stability.annual.2023.sample.bad_rate:.2%}}）。
-4. **漂移监控要和「线上模型自己的参照窗」比，不能和 2005–2010 的训练期比。** 和训练期比，测试期 {{stability.quarters.test}} 个季度里两个模型都有 {{stability.rules.scorecard.test_quarters_act}} 个超过 {{stability.psi_thresholds.1}}，形同常亮，主因是利率（测试期利率 CSI 平均 {{stability.csi_mean_test.original_interest_rate:.2f}}）。改成「当年线上的滚动模型」和「它自己的参照年」比，评分卡连续两季超 {{stability.psi_thresholds.1}} 的季度落在 2018Q3–2019Q1、2020Q3–2021Q4 和 2023Q2 以后，对应 2018 年底加息、疫情期再融资潮和 2023 年加息后的客群变化。这些是真实的客群移动，所以 R1 的动作是「查原因」，不是直接重训。和上年同季比只作短期突变的辅助信号：它在高利率持续一年后就会熄火（2023Q4 以后不再报警，而固定模型此时仍严重高估）。
-5. **按真实滞后跑的再校准闭环校不准，要升级到重训加人工判断。** 第 Y 年年初只能看到 Y−{{config.stability.recalibration.fit_year_back}} 年（表现期已满）的结果。按这个时点逐年回测 R2：没有一年不触发；{{stability.rules.scorecard.years_r2_escalate}} 年的参照年宽限贷款占比超过 {{config.stability.recalibration.max_assisted_share:.0%}}，保护规则拦下了 Platt（不拦的话评分卡 2022 年会从高估变成低估，O/E {{stability.annual.2022.scorecard.recal.oe:.2f}}）。执行后 O/E 落进容忍带（{{config.stability.rules.oe_band.0}}–{{config.stability.rules.oe_band.1}}）的只有 {{stability.rules.scorecard.years_policy_in_band}} 年。违约水平随利率、房价和政策逐年变化，3 年前的数据追不上。
+4. **漂移监控要和「线上模型上线前最近的申请」比，不能和 2005–2010 的训练期比。** 和训练期比，测试期 {{stability.quarters.test}} 个季度里评分卡有 {{stability.rules.scorecard.test_quarters_act}} 个、LightGBM 有 {{stability.rules.lightgbm.test_quarters_act}} 个超过 {{stability.psi_thresholds.1}}，形同常亮，主因是利率（测试期利率 CSI 平均 {{stability.csi_mean_test.original_interest_rate:.2f}}）。改成「当年线上的滚动模型」和「上线前最近 4 个季度的全部申请」比，评分卡连续两季超 {{stability.psi_thresholds.1}} 的只有 {{stability.rules.scorecard.ref_rolling_fired_act}}，对应疫情前后的再融资潮和 2022 年加息；LightGBM 没有季度达到行动线，观察线是 {{stability.rules.lightgbm.ref_rolling_fired_watch}}。这些是真实的客群移动，所以 R1 的动作是「查原因」，不是直接重训。和上年同季比只作短期突变的辅助信号：它在高利率持续一年后就会熄火（2023Q4 以后不再报警，而固定模型此时仍严重高估）。
+5. **按真实滞后跑的再校准闭环校不准，要升级到重训加人工判断。** 第 Y 年年初只能看到 Y−{{config.stability.recalibration.fit_year_back}} 年（表现期已满）的结果。按这个时点逐年回测 R2：没有一年不触发；{{stability.rules.scorecard.years_r2_escalate}} 年的参照年宽限贷款占比超过 {{config.stability.recalibration.max_assisted_share:.0%}}，保护规则拦下了 Platt。这是用准确度换保守：不拦的话 O/E 其实更接近 1（LightGBM 2021 年 {{stability.annual.2021.lightgbm.recal.oe:.2f}}，已在容忍带内），但评分卡 2022 年会从高估变成低估（O/E {{stability.annual.2022.scorecard.recal.oe:.2f}}），而低估违约对放贷方更危险。执行后 O/E 落进容忍带（{{config.stability.rules.oe_band.0}}–{{config.stability.rules.oe_band.1}}）的只有 {{stability.rules.scorecard.years_policy_in_band}} 年。这个数字对升级年份偏悲观：回测里「升级」按维持原模型处理，没有模拟人工复核和重训。违约水平随利率、房价和政策逐年变化，3 年前的数据追不上。
 
 ## 设置
 
 - 模型：直接重用 `MULT-415` 的两个模型（同一配置、同一随机种子重训，测试段 AUC 与 `outputs/metrics.json` 一致，代码里有断言）。
 - 样本：2005Q1–2024Q2 每个发放季度的主样本（剔除缺陷贷款和窗口内带宽限 / 灾害标记的贷款），共 {{stability.quarters.n}} 个季度，每季度至少 {{stability.quarters.min_loans:,}} 笔，含建模时没用的隔离年。
 - 部署时点：回测第 Y 年时假设模型在 Y 年年初上线，只能用到 Y−1 年 12 月前表现期已满的标签（首次还款月 + {{config.target.performance_months}} − 1 个月不晚于 Y−1 年 12 月）。滚动重训、Platt 拟合和 R2、R3 判定都按这个截尾。
-- PSI / CSI：分数按参照窗的十分位分箱；CSI 用评分卡入模特征的 WOE 分箱。空箱用一个很小的占比代替以免除零，所以空箱多的变量（如编码改过的渠道）PSI 和 CSI 会偏大，只看相对大小。阈值 {{stability.psi_thresholds.0}} / {{stability.psi_thresholds.1}} 来自常量白名单（行业惯例）。
+- PSI / CSI：用每个季度的全部申请（宽限标记要事后才知道，监控时拿不到）；分数按参照窗的十分位分箱；CSI 用评分卡入模特征的 WOE 分箱。空箱用一个很小的占比代替以免除零，所以空箱多的变量（如编码改过的渠道）PSI 和 CSI 会偏大，只看相对大小。阈值 {{stability.psi_thresholds.0}} / {{stability.psi_thresholds.1}} 来自常量白名单（行业惯例）。
 - 季度 AUC：坏样本不到 {{config.stability.min_bads_for_auc}} 个的季度留空。
-- 滚动重训：第 Y 年用 Y−{{config.stability.rolling.train_years_back.0}} 到 Y−{{config.stability.rolling.train_years_back.1}} 年训练，LightGBM 在 Y−{{config.stability.rolling.valid_year_back}} 年（截尾后）早停；训练年和早停年之间不隔离。
+- 滚动重训：第 Y 年用 Y−{{config.stability.rolling.train_years_back.0}} 到 Y−{{config.stability.rolling.train_years_back.1}} 年训练，LightGBM 在 Y−{{config.stability.rolling.valid_year_back}} 年（截尾后）早停；训练年和早停年之间不隔离。它和「去掉危机」不只差在数据新旧：训练年数不同（5 年对 3 年），早停年不同，2017 年的滚动训练窗（2009–2013）还含危机年 2009。
+- 2017 年的参照年 2014 落在固定模型的验证段里（LightGBM 早停也用了它），所以 2017 年的 R2、R3 判定和 Platt 不算样本外。
+- 宽限保护的 {{config.stability.recalibration.max_assisted_share:.0%}} 上限是看了回测之后定的，没有独立验证。
 - 置信区间：每年有放回重抽 {{config.stability.bootstrap_reps}} 次，同一年各模型变体共用重抽样本，差值是配对的。
 - 校准偏离：实际坏样本数和预测坏样本数之差除以其标准差得 z，|z| 超过 {{config.model.evaluation.ci_level:.0%}} 正态分位数为显著。
 
 ## 1 按季度 PSI、CSI、AUC
 
-![上：分数 PSI（对数刻度）：实线和训练段比，虚线和上年同季比，点线（测试期）是滚动模型和它自己的参照年比，横线为阈值；下：季度 AUC，坏样本不足的季度留空；灰底为危机期和疫情宽限期](figures/stability_quarterly.png)
+![上：分数 PSI（对数刻度）：实线和训练段比，虚线和上年同季比，点线（测试期）是滚动模型和上线前 4 个季度的申请比，横线为阈值；下：季度 AUC，坏样本不足的季度留空；灰底为危机期和疫情宽限期](figures/stability_quarterly.png)
 
 ![各特征按季度的 CSI（相对训练段），颜色到行动阈值封顶，按峰值排序](figures/stability_csi.png)
 
@@ -129,7 +131,7 @@ AUC 点估计；最后一列是滚动 − 去掉危机的配对差和 {{config.m
 
 ```mermaid
 flowchart TD
-  A[每季度：新发放贷款打分] --> B{线上模型分数 PSI vs 它自己的参照窗}
+  A[每季度：新发放贷款打分] --> B{线上模型分数 PSI vs 上线前 4 个季度的申请}
   B -- 连续 2 季 ≥ 0.25 --> C[查 CSI 定位变量：市场利率、客群、编码变更]
   B -- 连续 2 季 ≥ 0.1 --> D[观察]
   A --> B2{同比 PSI 突变}
@@ -145,15 +147,15 @@ flowchart TD
 
 | 规则 | 数据 | 触发条件 | 动作 | 回测（2017–2024Q2，按部署时点） |
 | --- | --- | --- | --- | --- |
-| R1 分数漂移（主） | 当季新发放，不需要标签 | 线上模型分数和它自己的参照窗比，连续 {{config.stability.rules.consecutive_quarters}} 季 ≥ {{stability.psi_thresholds.1}} 行动、≥ {{stability.psi_thresholds.0}} 观察 | 用 CSI 查原因 | 评分卡行动 {{stability.rules.scorecard.ref_rolling_fired_act}}；LightGBM 行动 {{stability.rules.lightgbm.ref_rolling_fired_act}} |
+| R1 分数漂移（主） | 当季新发放，不需要标签 | 线上模型分数和上线前最近 4 个季度的全部申请比，连续 {{config.stability.rules.consecutive_quarters}} 季 ≥ {{stability.psi_thresholds.1}} 行动、≥ {{stability.psi_thresholds.0}} 观察 | 用 CSI 查原因 | 评分卡行动 {{stability.rules.scorecard.ref_rolling_fired_act}}；LightGBM 行动 {{stability.rules.lightgbm.ref_rolling_fired_act}} |
 | R1b 同比突变（辅） | 同上 | 和上年同季比，连续 {{config.stability.rules.consecutive_quarters}} 季 ≥ {{stability.psi_thresholds.1}} | 同上 | 评分卡 {{stability.rules.scorecard.yoy_fired_act}}；LightGBM {{stability.rules.lightgbm.yoy_fired_act}} |
-| R2 校准偏离 | 参照年 Y−{{config.stability.recalibration.fit_year_back}}（截尾后） | O/E 的 z 超出 {{config.model.evaluation.ci_level:.0%}} 区间，且 O/E 出了 {{config.stability.rules.oe_band.0}}–{{config.stability.rules.oe_band.1}} | 参照年宽限占比不超过 {{config.stability.recalibration.max_assisted_share:.0%}} 做 Platt，否则升级 | 评分卡 Platt {{stability.rules.scorecard.years_r2_recalibrate}}、升级 {{stability.rules.scorecard.years_r2_escalate}} |
+| R2 校准偏离 | 参照年 Y−{{config.stability.recalibration.fit_year_back}}（截尾后） | O/E 的 z 超出 {{config.model.evaluation.ci_level:.0%}} 区间，且 O/E 出了 {{config.stability.rules.oe_band.0}}–{{config.stability.rules.oe_band.1}} | 参照年宽限占比不超过 {{config.stability.recalibration.max_assisted_share:.0%}} 做 Platt，否则升级 | 评分卡 Platt {{stability.rules.scorecard.years_r2_recalibrate}}、升级 {{stability.rules.scorecard.years_r2_escalate}}；LightGBM Platt {{stability.rules.lightgbm.years_r2_recalibrate}}、升级 {{stability.rules.lightgbm.years_r2_escalate}} |
 | R3 区分度下降 | 同上 | 参照年 AUC 低于验证段 AUC 区间下限 | 重训 | 评分卡 {{stability.rules.scorecard.years_retrain}}；LightGBM {{stability.rules.lightgbm.years_retrain}} |
 
 - 阈值：PSI 的 {{stability.psi_thresholds.0}} / {{stability.psi_thresholds.1}} 来自常量白名单；连续季度数、O/E 容忍带、宽限占比上限和置信水平是本项目的设置（`config/stability.yaml`、`config/model.yaml`）。
-- R1 的「参照窗」就是线上模型最近一次重训或再校准用的那一年。回测里线上模型按每年滚动重训算。
+- R1 的参照窗用上线前最近 4 个季度的申请：PSI 不需要标签，用最新的分布才能把「参照太旧」和「真漂移」分开。回测里线上模型按每年滚动重训算。
 - R2、R3 有天然滞后：Y 年发放的贷款到 Y+{{config.stability.recalibration.fit_year_back}} 年初才能拿来判定，这正是 R1 的价值。
-- 回测结论：R2 年年触发、执行后多数年份仍出带，R3 多数年份触发。固定模型加年度 Platt 不够，建议改成每年重训（训练集不含危机年份），加上利率等宏观因素的人工判断。
+- 回测结论：R2 年年触发、执行后多数年份仍出带，R3 多数年份触发。固定模型加年度 Platt 不够，建议改成每年重训（训练集不含危机年份），疫情宽限年份也要单独处理：2024 年 LightGBM 的滚动窗（2016–2020）含疫情年份，显著差于去掉危机的模型（{{stability.annual.2024.lightgbm.delta_rolling_minus_no_crisis.est:.4f}}），建议剔除这几年或降权；再加上利率等宏观因素的人工判断。
 
 ## 局限
 
