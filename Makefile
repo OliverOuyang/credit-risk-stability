@@ -37,10 +37,10 @@ report:
 test:
 	uv run pytest -q
 
-CHECKS := leakage split repro numbers redline
+CHECKS := leakage split repro numbers redline data training
 
 # Runs every check (no early stop) and fails if any failed.
 check: test
-	@fail=0; for c in $(CHECKS); do uv run python -m checks.check_$$c || fail=1; done; exit $$fail
+	@fail=0; for c in $(CHECKS); do PYTHONPATH=src uv run python -m checks.check_$$c || fail=1; done; exit $$fail
 
 all: manifest bad-counts frame stability-frame model stability report check

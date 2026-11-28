@@ -24,3 +24,12 @@ evaluation:
 dev:                    # synthetic subset for check_repro (runs in CI, no raw data)
   loans_per_segment: 3000
   bootstrap_reps: 20
+# checks/check_training.py, on outputs/metrics.json "training". Project policy, not an industry standard:
+# set 2026-11-28 from the first real run (AUC gap train - valid: scorecard 0.057, LightGBM 0.066; LightGBM
+# stopped at round 37 of 2000). Train (2005-2010) and valid (2013-2014) are years apart, so the plain gap
+# also holds drift; the excess of LightGBM's gap over the scorecard's isolates overfitting, since drift hits both.
+training_checks:
+  max_auc_gap: 0.10              # train - valid AUC, either model
+  max_valid_above_train: 0.02    # valid clearly beating train hints at labels or future data leaking into valid
+  max_gap_excess_lightgbm: 0.03  # LightGBM gap - scorecard gap
+  min_best_iteration: 10         # stopping this early: valid AUC peaked at once, split or target mismatch

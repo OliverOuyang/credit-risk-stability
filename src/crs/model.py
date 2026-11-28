@@ -181,8 +181,18 @@ def run(frame, cfg, seed, reps):
         for model in ("scorecard", "lightgbm"):
             res[model]["segments"][name] = ev[model]
         delta[name] = ev["delta_auc"]
-    return {"sample": sample, "delta_auc_lightgbm_minus_scorecard": delta, **res}, \
+    return {"sample": sample, "delta_auc_lightgbm_minus_scorecard": delta, "training": training(res, cfg), **res}, \
         {"scorecard": sc_pred, "lightgbm": gb_pred}
+
+
+def training(res, cfg):
+    """Early stopping and train - valid AUC gaps, read by checks/check_training.py."""
+    gap = {m: round(res[m]["segments"]["train"]["auc"]["est"] - res[m]["segments"]["valid"]["auc"]["est"], R)
+           for m in ("scorecard", "lightgbm")}
+    return {"lightgbm_best_iteration": res["lightgbm"]["best_iteration"],
+            "lightgbm_max_rounds": cfg["lightgbm"]["max_rounds"],
+            "auc_gap_train_minus_valid": gap,
+            "auc_gap_excess_lightgbm_over_scorecard": round(gap["lightgbm"] - gap["scorecard"], R)}
 
 
 def dev_frame(cfg, seed):

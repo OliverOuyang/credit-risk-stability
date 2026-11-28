@@ -52,23 +52,35 @@ def label(orig, perf, cfg):
     agg = p.groupby("loan_id")[["bad", "excluded", "assisted"]].any().astype(int)
     out = orig[["loan_id"]].merge(agg, on="loan_id", how="left").fillna(0)
     out[["bad", "excluded", "assisted"]] = out[["bad", "excluded", "assisted"]].astype(int)
-    out["vintage_year"] = 2000 + out["loan_id"].str[1:3].astype(int)
-    out.loc[out["vintage_year"] > 2090, "vintage_year"] -= 100  # shortcut: 2-digit year, valid 1991-2090
+    out["vintage_year"] = id_year(out["loan_id"]).values
     return out
 
 
+def id_year(loan_id):
+    """Loan Identifier PYYQnXXXXXXX -> origination year."""
+    y = 2000 + loan_id.str[1:3].astype(int)
+    return y - 100 * (y > 2090)  # shortcut: 2-digit year, valid 1991-2090
+
+
 def bad_counts(raw_dir):
-    """Per-vintage table from data/raw/sample_YYYY/ files (sample_orig_YYYY.txt, sample_perf_YYYY.txt)."""
+    """Per-vintage table from data/raw/sample_YYYY/ files (sample_orig_YYYY.txt, sample_perf_YYYY.txt).
+    Vintage = origination year in the Loan Identifier, the same key the split and frames use
+    (a file can hold a loan from the next year, e.g. one 2009 loan in sample_2008)."""
     cfg = load_cfg("target")
-    rows = []
+    labs, raw = [], []
     for orig_path in sorted(Path(raw_dir).rglob("sample_orig_*.txt")):
-        year = orig_path.stem.split("_")[-1]
-        perf_path = orig_path.with_name(f"sample_perf_{year}.txt")
-        lab = label(read_pipe(orig_path, ORIG_COLS), read_pipe(perf_path, PERF_COLS), cfg)
-        main = lab[(lab.excluded == 0) & (lab.assisted == 0)]
-        rows.append({"vintage": int(year), "loans_uncensored": len(lab), "loans_main": len(main),
-                     "bads_main": int(main.bad.sum()), "bads_incl_assisted": int(lab[lab.excluded == 0].bad.sum()),
-                     "assisted": int(lab.assisted.sum())})
+        perf_path = orig_path.with_name(orig_path.name.replace("_orig_", "_perf_"))
+        orig = read_pipe(orig_path, ORIG_COLS)
+        raw.append(orig["loan_id"])
+        labs.append(label(orig, read_pipe(perf_path, PERF_COLS), cfg))
+    lab, ids = pd.concat(labs), pd.concat(raw)
+    rows = []
+    for y in sorted(set(id_year(ids))):
+        v = lab[lab.vintage_year == y]
+        main = v[(v.excluded == 0) & (v.assisted == 0)]
+        rows.append({"vintage": y, "loans_raw": int((id_year(ids) == y).sum()), "loans_uncensored": len(v),
+                     "loans_main": len(main), "bads_main": int(main.bad.sum()),
+                     "bads_incl_assisted": int(v[v.excluded == 0].bad.sum()), "assisted": int(v.assisted.sum())})
     return pd.DataFrame(rows)
 
 
